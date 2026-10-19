@@ -81,7 +81,7 @@ def public_https(url):
 def target_rule(root, adapter, identity, url):
     """Pure local validation, used by the offline plan; grants no network access."""
     parsed = public_https(url)
-    registry = json.loads((pathlib.Path(root) / 'lib/source-registry.json').read_text())
+    registry = json.loads((pathlib.Path(root) / 'config/source-registry.json').read_text())
     if adapter == 'rss':
         source = next((s for s in registry if s.get('enabled', True) and s['name'] == identity and s['url'] == url), None)
         if source:

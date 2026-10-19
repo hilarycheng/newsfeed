@@ -12,7 +12,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 def main():
     policy = controls(ROOT)
-    registry_path = ROOT / 'lib/source-registry.json'
+    registry_path = ROOT / 'config/source-registry.json'
     watch_path = ROOT / 'config/steam-deals.json'
     rows = []
     for source in json.loads(registry_path.read_text()):

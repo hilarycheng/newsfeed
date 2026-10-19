@@ -12,7 +12,7 @@ REASON = '暫時略過：此確切 RSS 網址的讀取被存取審核拒絕；�
 
 
 def hold_source(root, url):
-    registry = json.loads((root / 'lib/source-registry.json').read_text())
+    registry = json.loads((root / 'config/source-registry.json').read_text())
     sources = [s for s in registry if s.get('enabled', True) and s['url'] == url]
     if len(sources) != 1:
         raise ValueError('Denial must identify exactly one enabled registered RSS URL; stop for review')
@@ -34,7 +34,7 @@ def hold_source(root, url):
 
 def hold_domain(root, hostname):
     host = normalized_host(hostname)
-    registry = json.loads((root / 'lib/source-registry.json').read_text())
+    registry = json.loads((root / 'config/source-registry.json').read_text())
     sources = [s for s in registry if normalized_host(urlsplit(s['url']).hostname) == host]
     if not sources:
         raise ValueError('Denied hostname must match an existing registered RSS destination; stop for review')

@@ -19,7 +19,7 @@ RSS titles and publisher excerpts stay in their original language. No AI transla
 ## Files
 
 - data/feed.json: authoritative published snapshot, versioned in Site source
-- lib/source-registry.json: public source registry
+- config/source-registry.json: public source registry
 - scripts/fetch-news.py: cloud-local public RSS intake
 - scripts/build-static.mjs: static bundle generator
 - app/globals.css: reader stylesheet used by the generator

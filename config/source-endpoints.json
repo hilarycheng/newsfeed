@@ -1,0 +1,6 @@
+{
+  "steamApi": "https://store.steampowered.com/api/appdetails",
+  "ithomeMetadataBase": "https://www.ithome.com.tw/news/",
+  "cveRevision": "https://api.github.com/repos/CVEProject/cvelistV5/git/ref/heads/main",
+  "cveBase": "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/"
+}

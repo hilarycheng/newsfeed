@@ -1,40 +1,84 @@
-# News Feed — 離線代碼審閱包
+# News Feed — Rust feeder
 
-2026-10-18。來源基準 v42，另含未發布的來源錯誤診斷修改。
+Rust feeder 喺屋企執行。dot 將成功生成嘅 `dist/` 複製到 cloud computer。
+RSS、Steam、CVE 處理唔需要 Python 或 LLM。網站 build 沿用 Node.js。
 
-本包供檢查代碼、備份及執行離線 fixture 測試；沒有自動啟動、部署、排程或安裝程序。沒有放到家用電腦，亦沒有讀取新聞來源或重新發布網站。
+## Build
 
-## 修改
+需要 Rust 1.89+（Cargo）同 Node.js 18+。喺專案根目錄執行：
 
-- 單一來源 HTTP、timeout、XML 等錯誤只略過該來源，其餘來源繼續。
-- 加入來源 ID、錯誤分類、HTTP 狀態及成功／失敗／略過／有限來源數。
-- 整體失敗附帶 pipeline stage。原有 70%／至少 10 來源及至少 30 卡片門檻不變。
-- 新增 tests，證明 188 個正常來源＋1 個失敗來源可以通過門檻，timeout 後正常來源仍可處理。
+```sh
+./build.sh
+```
 
-## 尚未解決的阻礙
+執行檔位於 `target/release/news-feeder`。編譯後執行唔需要 Rust toolchain。
+`build.sh` 只做編譯，唔會讀新聞或啟動排程。
+不同 OS／CPU 需要各自編譯。
 
-最近一次平台存取審核拒絕未提供確切目的地，仍未能安全隔離。現有 URL／hostname／CVE holds 全數保留。這份代碼不授權重新嘗試遭拒請求，也不提供更換機器、路徑或網絡以繞過限制的方式。必須先釐清拒絕目標與範圍，才可重新進行 live fetch。不要執行 run-feeder.py、fetch-news.py 或 fetch-steam-deals.py 來試探。
+## 執行
 
-詳細既有政策見 SOURCE_POLICY.md；它所描述的發布程序不是本離線包的執行指示。
+喺專案根目錄執行：
 
-## 離線測試
+```sh
+./target/release/news-feeder
+```
 
-需要已安裝的 Python 3 及 Node.js；Python tests 只用標準函式庫。從解壓目錄執行：
+每次執行輸出一行 JSON。成功時 `status` 為 `success`，exit code 為 0。
+結果亦寫入 `.sites-runtime/feeder-result.json`。
+錯誤日誌位於 `.sites-runtime/feeder.log`。
+失敗時保留上一期 `data/feed.json` 同 `dist/`。
 
-    python scripts/test-feeder.py
-    python scripts/test-steam-lifecycle.py
-    python scripts/test-cve-json.py
-    python scripts/test-source-isolation.py
-    python scripts/test-source-gateway.py
-    python scripts/test-cve-transport.py
-    python scripts/test-source-holds.py
-    python scripts/test-source-health.py
-    node --test --test-skip-pattern=Chromium scripts/test-reader.mjs
+沿用一小時內已完成嘅 intake，唔重新讀取來源：
 
-以上是合成 fixture 測試，非 live feed 測試。Chromium 測試不包括在本包驗證。
+```sh
+./target/release/news-feeder --from-cache
+```
 
-## 刻意不包含
+## 外部 config
 
-Git 歷史、憑證、環境變數檔、Sites hosting 身分、node_modules、日誌、候選新聞、真實文章資料、生成的 HTML、已發布 feed.json、CVE／Steam durable state。這不是可以直接取代現有資料或部署的完整生產快照。不要建立空白 state 取代現有 durable state。
+設定喺每次執行時讀取。修改設定後唔需要重新編譯。
 
-SHA256SUMS.json 列出包內檔案 hash。
+| 檔案 | 用途 |
+| --- | --- |
+| `config/source-registry.json` | RSS 來源、語言、分類、啟用狀態；由原有 `lib/` 搬入 |
+| `config/source-endpoints.json` | Steam、iThome metadata、官方 CVE 讀取網址 |
+| `config/steam-deals.json` | Steam 遊戲清單 |
+| `config/editorial-policy.json` | 篩選同時間窗口 |
+| `config/cve-policy.json` | 原有 CVE schema 同開源產品判斷清單 |
+| `config/source-holds.json` | 現有 URL／hostname／CVE holds |
+
+現有 holds 同禁止 redirect 嘅行為會保留。移植唔代表解除存取限制。
+
+## dot 複製流程
+
+1. 屋企執行 feeder。
+2. dot 確認 `feeder-result.json` 嘅 `status` 為 `success`。
+3. dot 核對結果內嘅 `sha256` 與 `dist/feed.json`。
+4. dot 將整個 `dist/` 複製到 cloud computer。
+
+Cloud computer 接收已生成嘅靜態檔案，唔需要重跑 feeder 或 build。
+呢個專案唔包含傳送憑證、自動複製、部署或排程設定。
+
+## 本機資料
+
+- 保留 `data/steam-deal-history.json`。佢記錄優惠首次出現同價格變動時間。
+- 保留 `data/cve-json-state.json`。佢記錄 checkpoint、版本同已撤銷 CVE。
+- `data/` 同 `.sites-runtime/` 只留喺屋企，唔放入公開網站。
+- 從舊環境搬過嚟時，先複製現有 `data/`。JSON 格式沿用 Python 版。
+- 首次全新執行可以冇 `data/feed.json`。新 Steam history 會以首次觀察建立基準。
+
+原有離線包冇包含生產 state，亦冇真實新聞資料。唔好用空白 state 覆蓋已有紀錄。
+
+## 離線驗證
+
+```sh
+cargo test --locked
+node --test --test-skip-pattern=Chromium scripts/test-reader.mjs
+```
+
+Rust tests 使用合成 RSS／Atom、Steam fixture、CVE record 同暫存目錄。
+包括 cache → feed → Node build，以及 build 失敗後保留上一期嘅測試。
+Tests 唔會讀取真實來源。`--from-cache` 需要有效 intake，唔係測試指令。
+
+`scripts/*.py` 保留作移植對照，唔屬於 Rust 執行路徑。
+原有來源政策見 `SOURCE_POLICY.md`。

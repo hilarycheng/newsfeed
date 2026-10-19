@@ -20,7 +20,7 @@ class Holds(unittest.TestCase):
         self.url = 'https://nodejs.org/en/feed/blog.xml'
         self.registry = [{'name': 'Node.js', 'url': self.url},
                          {'name': 'Disabled', 'url': 'https://example.org/rss', 'enabled': False}]
-        (self.root / 'lib/source-registry.json').write_text(json.dumps(self.registry))
+        (self.root / 'config/source-registry.json').write_text(json.dumps(self.registry))
         self.path = self.root / 'config/source-holds.json'
         self.initial = {'rss': {'https://openai.com/news/rss.xml': 'existing'},
                         'cve': 'held', 'networkPolicy': 'fixed inventory'}
@@ -52,7 +52,7 @@ class Holds(unittest.TestCase):
 
     def test_duplicate_identity_fails_without_mutation(self):
         self.registry.append({'name': 'Other', 'url': self.url})
-        (self.root / 'lib/source-registry.json').write_text(json.dumps(self.registry))
+        (self.root / 'config/source-registry.json').write_text(json.dumps(self.registry))
         before = self.path.read_bytes()
         with self.assertRaises(ValueError):
             m.hold_source(self.root, self.url)
@@ -67,7 +67,7 @@ class Holds(unittest.TestCase):
     def test_hostname_hold_all_matches_and_preserves_other_holds(self):
         self.registry.extend([{'name': 'Second', 'url': 'https://nodejs.org/second'},
                               {'name': 'Lookalike', 'url': 'https://nodejs.org.example.com/rss'}])
-        (self.root / 'lib/source-registry.json').write_text(json.dumps(self.registry))
+        (self.root / 'config/source-registry.json').write_text(json.dumps(self.registry))
         result = m.hold_domain(self.root, 'NODEJS.ORG.')
         policy = json.loads(self.path.read_text())
         self.assertEqual(result['evidenceType'], 'hostname')

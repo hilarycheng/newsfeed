@@ -43,7 +43,7 @@ class GatewayTests(unittest.TestCase):
             {'name': 'iThome', 'url': 'https://www.ithome.com.tw/rss'},
             {'name': 'Disabled', 'url': 'https://example.org/rss', 'enabled': False},
         ]
-        (self.root / 'lib/source-registry.json').write_text(json.dumps(registry))
+        (self.root / 'config/source-registry.json').write_text(json.dumps(registry))
         (self.root / 'config/steam-deals.json').write_text(json.dumps([{'appId': 123}]))
         self.holds({'rss': {'https://inside.java/feed.xml': 'held'}, 'cve': 'held'})
         self.no_socket = patch.object(socket, 'create_connection', side_effect=AssertionError('real socket forbidden'))
@@ -92,7 +92,7 @@ class GatewayTests(unittest.TestCase):
     def test_exact_denied_source_holds_leave_other_sources_available(self):
         denied = [('Node.js', 'https://nodejs.org/en/feed/blog.xml'),
                   ('OpenAI', 'https://openai.com/news/rss.xml')]
-        registry_path = self.root / 'lib/source-registry.json'
+        registry_path = self.root / 'config/source-registry.json'
         registry = json.loads(registry_path.read_text())
         registry.extend({'name': name, 'url': url} for name, url in denied)
         registry_path.write_text(json.dumps(registry))

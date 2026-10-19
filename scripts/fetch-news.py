@@ -7,7 +7,7 @@ from source_health import source_failure, source_counts
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 UTC=datetime.timezone.utc
 NOW=datetime.datetime.now(UTC)
-SOURCES=[s for s in json.loads((ROOT/'lib/source-registry.json').read_text()) if s.get('enabled',True)]
+SOURCES=[s for s in json.loads((ROOT/'config/source-registry.json').read_text()) if s.get('enabled',True)]
 def text(node): return ''.join(node.itertext()) if node is not None else ''
 def clean(v):
  for _ in range(2): v=html.unescape(v)

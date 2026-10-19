@@ -9,7 +9,7 @@ from source_health import source_counts, require_rss_health
 ROOT=pathlib.Path(__file__).resolve().parents[1]
 UTC=dt.timezone.utc
 POLICY=json.loads((ROOT/'config/editorial-policy.json').read_text())
-REGISTRY=json.loads((ROOT/'lib/source-registry.json').read_text())
+REGISTRY=json.loads((ROOT/'config/source-registry.json').read_text())
 SOURCES={s['name']:s for s in REGISTRY}
 NOW=dt.datetime.now(UTC)
 BLOCK_GAMES=re.compile(r'\b(FPS|first.person shooter|Counter.Strike|Call of Duty|Battlefield|Valorant|Fortnite|PUBG|Apex Legends|Overwatch|Destiny 2|esports?|League of Legends|Dota|multiplayer.only|MMORPG|PS[3456]|PlayStation|Xbox|Nintendo|Switch 2|console)\b|第一人稱射擊|电竞|電競|主機獨佔',re.I)
