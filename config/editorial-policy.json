@@ -1,0 +1,64 @@
+{
+  "windowHours": 72,
+  "preferUserFeedlySources": true,
+  "preferPrimarySources": true,
+  "maximumConsecutiveCategory": null,
+  "maximumConsecutiveSource": null,
+  "dealPriority": "Chronological by durable firstSeen or meaningful priceChangedAt; expire after 72 hours. checkedAt never creates freshness.",
+  "gamingExclusions": [
+    "FPS",
+    "console-only",
+    "esports",
+    "LoL",
+    "multiplayer-only"
+  ],
+  "categories": [
+    "Java / Kotlin",
+    "Rust / Node.js",
+    "Linux",
+    "資安",
+    "AI",
+    "單機遊戲",
+    "Android / 嵌入式",
+    "科技",
+    "Elixir / Erlang",
+    "World / 國際",
+    "香港"
+  ],
+  "sourceLanguageHandling": "English and Traditional Chinese, plus raw Simplified Chinese excerpts ONLY for source id ifanr, exact verified feed https://www.ifanr.com/feed and ifanr.com/www.ifanr.com article hosts. No model translation. Other Simplified Chinese and Japanese sources remain excluded.",
+  "noWebsiteWriteEndpoints": true,
+  "mandatorySources": [
+    {
+      "name": "iThome",
+      "feedUrl": "https://www.ithome.com.tw/rss",
+      "requestedPage": "https://www.ithome.com.tw/latest"
+    }
+  ],
+  "skippedUnidentifiedSources": [
+    "Comments for page 陳鍾誠的網站首頁",
+    "IT科技前線",
+    "New features",
+    "TechnicalReports"
+  ],
+  "unidentifiedSourcePolicy": "Skip at user request; do not guess URLs or request Feedly export.",
+  "excludeMedium": true,
+  "excludedMediumSourceNames": [
+    "Medium java",
+    "Medium spring-boot",
+    "Medium spring-framework",
+    "Medium kotlin",
+    "Medium rust",
+    "Medium nodejs",
+    "Medium linux",
+    "Medium llm",
+    "Medium ai-agents",
+    "Medium machine-learning",
+    "Medium rag"
+  ],
+  "excludedMediumDomains": [
+    "medium.com",
+    "blog.devops.dev"
+  ],
+  "ordering": "Descending publishedAt for articles and durable freshnessAt for Steam, then stable id; no artificial mixing or pins.",
+  "newSourceExpansionRequiresUserApproval": true
+}

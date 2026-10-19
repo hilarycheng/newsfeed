@@ -1,0 +1,17 @@
+{
+  "baselineAt": "2026-10-01T00:00:00Z",
+  "watchItem": {"appId": "123", "name": "Fixture Puzzle", "summary": "Synthetic offline Steam fixture."},
+  "discounted": {
+    "123": {
+      "success": true,
+      "data": {
+        "categories": [{"id": 2}],
+        "header_image": "https://example.com/fixture-cover.png",
+        "price_overview": {
+          "currency": "HKD", "initial": 10000, "final": 6000,
+          "discount_percent": 40, "initial_formatted": "HK$ 100.00", "final_formatted": "HK$ 60.00"
+        }
+      }
+    }
+  }
+}

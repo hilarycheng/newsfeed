@@ -1,0 +1,1984 @@
+[
+  {
+    "name": "Inside Java",
+    "url": "https://inside.java/feed.xml",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Spring",
+    "url": "https://spring.io/blog.atom",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Quarkus",
+    "url": "https://quarkus.io/feed.xml",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Java Code Geeks",
+    "url": "https://www.javacodegeeks.com/feed",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "discussionSource": false,
+    "preferredByUser": true,
+    "requestedName": "Java Code Geeks",
+    "aliases": [
+      "Java Code Geeks"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Baeldung Java",
+    "url": "https://www.baeldung.com/feed",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Foojay",
+    "url": "https://foojay.io/feed/",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "InfoQ Java",
+    "url": "https://feed.infoq.com/java/",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Rust",
+    "url": "https://blog.rust-lang.org/feed.xml",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "This Week in Rust",
+    "url": "https://this-week-in-rust.org/rss.xml",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Node.js",
+    "url": "https://nodejs.org/en/feed/blog.xml",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Deno",
+    "url": "https://deno.com/feed",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Bun",
+    "url": "https://bun.sh/rss.xml",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Tokio",
+    "url": "https://tokio.rs/blog/index.xml",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Rust Inside",
+    "url": "https://blog.rust-lang.org/inside-rust/feed.xml",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Rust Foundation",
+    "url": "https://rustfoundation.org/feed/",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Linux upstream",
+    "url": "https://www.kernel.org/feeds/kdist.xml",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "LWN",
+    "url": "https://lwn.net/headlines/rss",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Phoronix",
+    "url": "https://www.phoronix.com/rss.php",
+    "category": "Linux",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "discussionSource": false,
+    "preferredByUser": true,
+    "requestedName": "Phoronix",
+    "aliases": [
+      "Phoronix"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Linux Magazine",
+    "url": "https://www.linux-magazine.com/rss/feed/lmi_full",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Linux Today",
+    "url": "https://www.linuxtoday.com/feed/",
+    "category": "Linux",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "discussionSource": false,
+    "preferredByUser": true,
+    "requestedName": "Linux Today",
+    "aliases": [
+      "Linux Today"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Linuxiac",
+    "url": "https://linuxiac.com/feed/",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "9to5Linux",
+    "url": "https://9to5linux.com/feed",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "OMG Ubuntu",
+    "url": "https://www.omgubuntu.co.uk/feed",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Its FOSS",
+    "url": "https://itsfoss.com/rss/",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Fedora Magazine",
+    "url": "https://fedoramagazine.org/feed/",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Arch Linux",
+    "url": "https://archlinux.org/feeds/news/",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Debian News",
+    "url": "https://www.debian.org/News/news",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "KDE",
+    "url": "https://blogs.kde.org/index.xml",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Ubuntu Blog",
+    "url": "https://ubuntu.com/blog/feed",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Debian Security",
+    "url": "https://www.debian.org/security/dsa",
+    "category": "資安",
+    "language": "en",
+    "filter": "major_oss_security",
+    "discussionSource": false
+  },
+  {
+    "name": "Ubuntu Security",
+    "url": "https://ubuntu.com/security/notices/rss.xml",
+    "category": "資安",
+    "language": "en",
+    "filter": "major_oss_security",
+    "discussionSource": false
+  },
+  {
+    "name": "The Hacker News",
+    "url": "https://feeds.feedburner.com/TheHackersNews",
+    "category": "資安",
+    "language": "en",
+    "filter": "major_oss_security",
+    "discussionSource": false
+  },
+  {
+    "name": "BleepingComputer",
+    "url": "https://www.bleepingcomputer.com/feed/",
+    "category": "資安",
+    "language": "en",
+    "filter": "major_oss_security",
+    "discussionSource": false
+  },
+  {
+    "name": "SecurityWeek",
+    "url": "https://www.securityweek.com/feed/",
+    "category": "資安",
+    "language": "en",
+    "filter": "major_oss_security",
+    "discussionSource": false
+  },
+  {
+    "name": "Snyk",
+    "url": "https://snyk.io/blog/feed/",
+    "category": "資安",
+    "language": "en",
+    "filter": "major_oss_security",
+    "discussionSource": false
+  },
+  {
+    "name": "Sonatype",
+    "url": "https://www.sonatype.com/blog/rss.xml",
+    "category": "資安",
+    "language": "en",
+    "filter": "major_oss_security",
+    "discussionSource": false
+  },
+  {
+    "name": "Hugging Face",
+    "url": "https://huggingface.co/blog/feed.xml",
+    "category": "AI",
+    "language": "en",
+    "filter": "ai_technical",
+    "discussionSource": false
+  },
+  {
+    "name": "Ollama",
+    "url": "https://ollama.com/blog/rss.xml",
+    "category": "AI",
+    "language": "en",
+    "filter": "ai_technical",
+    "discussionSource": false
+  },
+  {
+    "name": "OpenAI",
+    "url": "https://openai.com/news/rss.xml",
+    "category": "AI",
+    "language": "en",
+    "filter": "ai_technical",
+    "discussionSource": false
+  },
+  {
+    "name": "Google Research",
+    "url": "https://research.google/blog/rss/",
+    "category": "AI",
+    "language": "en",
+    "filter": "ai_technical",
+    "discussionSource": false
+  },
+  {
+    "name": "Google AI",
+    "url": "https://blog.google/technology/ai/rss/",
+    "category": "AI",
+    "language": "en",
+    "filter": "ai_technical",
+    "discussionSource": false
+  },
+  {
+    "name": "DeepMind",
+    "url": "https://deepmind.google/blog/rss.xml",
+    "category": "AI",
+    "language": "en",
+    "filter": "ai_technical",
+    "discussionSource": false
+  },
+  {
+    "name": "Berkeley BAIR",
+    "url": "https://bair.berkeley.edu/blog/feed.xml",
+    "category": "AI",
+    "language": "en",
+    "filter": "ai_technical",
+    "discussionSource": false
+  },
+  {
+    "name": "MIT AI",
+    "url": "https://news.mit.edu/rss/topic/artificial-intelligence2",
+    "category": "AI",
+    "language": "en",
+    "filter": "ai_technical",
+    "discussionSource": false
+  },
+  {
+    "name": "Machine Learning Mastery",
+    "url": "https://machinelearningmastery.com/feed/",
+    "category": "AI",
+    "language": "en",
+    "filter": "ai_technical",
+    "discussionSource": false
+  },
+  {
+    "name": "Simon Willison",
+    "url": "https://simonwillison.net/atom/everything/",
+    "category": "AI",
+    "language": "en",
+    "filter": "ai_technical",
+    "discussionSource": false
+  },
+  {
+    "name": "AI News VentureBeat",
+    "url": "https://venturebeat.com/category/ai/feed/",
+    "category": "AI",
+    "language": "en",
+    "filter": "ai_technical",
+    "discussionSource": false
+  },
+  {
+    "name": "GamingOnLinux",
+    "url": "https://www.gamingonlinux.com/article_rss.php",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "discussionSource": false
+  },
+  {
+    "name": "PC Gamer",
+    "url": "https://www.pcgamer.com/rss/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "discussionSource": false
+  },
+  {
+    "name": "Rock Paper Shotgun",
+    "url": "https://www.rockpapershotgun.com/feed",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "discussionSource": false
+  },
+  {
+    "name": "PCGamesN",
+    "url": "https://www.pcgamesn.com/mainrss.xml",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "discussionSource": false
+  },
+  {
+    "name": "Steam news",
+    "url": "https://store.steampowered.com/feeds/news/",
+    "category": "Steam 單機",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "discussionSource": false,
+    "preferredByUser": true,
+    "requestedName": "Steam",
+    "aliases": [
+      "Steam",
+      "Steam news"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "IndieGamesPlus",
+    "url": "https://indiegamesplus.com/feed/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "discussionSource": false
+  },
+  {
+    "name": "RPG Site",
+    "url": "https://www.rpgsite.net/feed",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "discussionSource": false
+  },
+  {
+    "name": "RPGamer",
+    "url": "https://rpgamer.com/feed/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "discussionSource": false
+  },
+  {
+    "name": "Hades II Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/1145350/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Slay the Spire Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/646570/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Silksong Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/1030300/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Stardew Valley Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/413150/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Hades Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/1145360/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Baldurs Gate 3 Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/1086940/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Factorio Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/427520/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "RimWorld Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/294100/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Terraria Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/105600/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Noita Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/881100/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Balatro Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/2379780/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Dead Cells Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/588650/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Celeste Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/504230/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Hollow Knight Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/367520/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Civilization VII Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/1295660/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Crusader Kings III Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/1158310/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Dwarf Fortress Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/975370/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Satisfactory Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/526870/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Against the Storm Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/1336490/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "Manor Lords Steam",
+    "url": "https://store.steampowered.com/feeds/news/app/1363080/",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "steam_app_allowlist",
+    "discussionSource": false
+  },
+  {
+    "name": "iThome",
+    "url": "https://www.ithome.com.tw/rss",
+    "category": "科技",
+    "language": "zh-Hant",
+    "filter": "interest_match",
+    "discussionSource": false,
+    "preferredByUser": true,
+    "requestedName": "iThomeOnline",
+    "aliases": [
+      "iThomeOnline",
+      "iThome",
+      "iThome Online"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true,
+    "requiredByUser": true,
+    "requestedPage": "https://www.ithome.com.tw/latest"
+  },
+  {
+    "name": "TechNews AI",
+    "url": "https://technews.tw/category/ai/feed/",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "interest_match",
+    "discussionSource": false
+  },
+  {
+    "name": "TechOrange",
+    "url": "https://buzzorange.com/techorange/feed/",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "interest_match",
+    "discussionSource": false
+  },
+  {
+    "name": "DEV java",
+    "url": "https://dev.to/feed/tag/java",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DEV springboot",
+    "url": "https://dev.to/feed/tag/springboot",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DEV kotlin",
+    "url": "https://dev.to/feed/tag/kotlin",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DEV rust",
+    "url": "https://dev.to/feed/tag/rust",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DEV node",
+    "url": "https://dev.to/feed/tag/node",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DEV nodejs",
+    "url": "https://dev.to/feed/tag/nodejs",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DEV linux",
+    "url": "https://dev.to/feed/tag/linux",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DEV ai",
+    "url": "https://dev.to/feed/tag/ai",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DEV machinelearning",
+    "url": "https://dev.to/feed/tag/machinelearning",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DEV llm",
+    "url": "https://dev.to/feed/tag/llm",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DEV agents",
+    "url": "https://dev.to/feed/tag/agents",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Spring Boot",
+    "url": "https://spring.io/blog/category/releases.atom",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Baeldung Kotlin",
+    "url": "https://www.baeldung.com/kotlin/feed",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "discussionSource": false,
+    "preferredByUser": true,
+    "requestedName": "Baeldung Kotlin",
+    "aliases": [
+      "Baeldung Kotlin"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Baeldung Linux",
+    "url": "https://www.baeldung.com/linux/feed",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Reflectoring",
+    "url": "https://reflectoring.io/feed.xml",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Mkyong",
+    "url": "https://mkyong.com/feed/",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Vlad Mihalcea",
+    "url": "https://vladmihalcea.com/feed/",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Thorben Janssen",
+    "url": "https://thorben-janssen.com/feed/",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Docker",
+    "url": "https://www.docker.com/blog/feed/",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Kubernetes",
+    "url": "https://kubernetes.io/feed.xml",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DZone Java",
+    "url": "https://feeds.dzone.com/java",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DZone",
+    "url": "https://feeds.dzone.com/home",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Towards Data Science",
+    "url": "https://towardsdatascience.com/feed/",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Slashdot",
+    "url": "https://rss.slashdot.org/Slashdot/slashdotMain",
+    "category": "科技",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "discussionSource": true,
+    "preferredByUser": true,
+    "requestedName": "Slashdot",
+    "aliases": [
+      "Slashdot"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "OSNews",
+    "url": "https://www.osnews.com/feed/",
+    "category": "Linux",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "discussionSource": false,
+    "preferredByUser": true,
+    "requestedName": "OSNews",
+    "aliases": [
+      "OSNews"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Lobsters",
+    "url": "https://lobste.rs/rss",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": true
+  },
+  {
+    "name": "InfoQ",
+    "url": "https://feed.infoq.com/",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "The New Stack",
+    "url": "https://thenewstack.io/feed/",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "InfoWorld",
+    "url": "https://www.infoworld.com/feed/",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "DevClass",
+    "url": "https://devclass.com/feed/",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "The Register Software",
+    "url": "https://www.theregister.com/software/headlines.atom",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "The Register AI",
+    "url": "https://www.theregister.com/software/ai_ml/headlines.atom",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "AI Models Hugging Face Papers",
+    "url": "https://papers.takara.ai/api/feed",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Rust Reddit",
+    "url": "https://www.reddit.com/r/rust/.rss",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": true
+  },
+  {
+    "name": "Hacker News",
+    "url": "https://news.ycombinator.com/rss",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": true
+  },
+  {
+    "name": "TechNews",
+    "url": "https://technews.tw/feed/",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "INSIDE FeedBurner",
+    "url": "https://feeds.feedburner.com/inside-blog-taiwan",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Cool3c",
+    "url": "https://www.cool3c.com/rss",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Cool3c FeedBurner",
+    "url": "https://feeds.feedburner.com/cool3c-show",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "T客邦 FeedBurner",
+    "url": "https://feeds.feedburner.com/techbang/daily",
+    "category": "科技",
+    "language": "zh-Hant",
+    "filter": "interest_match",
+    "discussionSource": false,
+    "preferredByUser": true,
+    "requestedName": "T客邦",
+    "aliases": [
+      "T客邦 FeedBurner",
+      "T客邦"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "電腦王阿達",
+    "url": "https://www.kocpc.com.tw/feed",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "TechOrange",
+    "url": "https://techorange.com/feed/",
+    "category": "科技",
+    "language": "zh-Hant",
+    "filter": "interest_match",
+    "discussionSource": false,
+    "preferredByUser": true,
+    "requestedName": "TechOrange",
+    "aliases": [
+      "TechOrange"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "電腦玩物",
+    "url": "https://www.playpcesor.com/feeds/posts/default",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "免費資源網路社群",
+    "url": "https://free.com.tw/feed/",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "重灌狂人",
+    "url": "https://briian.com/feed/",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "4Gamers",
+    "url": "https://www.4gamers.com.tw/rss/latest-news",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Unwire Taiwan",
+    "url": "https://unwire.pro/feed/",
+    "category": "AI",
+    "language": "zh-Hant",
+    "filter": "topic",
+    "discussionSource": false
+  },
+  {
+    "name": "Andrew Ayer",
+    "url": "https://www.agwa.name/blog/feed",
+    "category": "科技",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "Andrew Ayer",
+    "aliases": [
+      "Andrew Ayer"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Android Developers Blog",
+    "url": "https://android-developers.googleblog.com/feeds/posts/default",
+    "category": "Android / 嵌入式",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "Android Developers Blog",
+    "aliases": [
+      "Android Developers Blog"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "AndroidPhoneFans",
+    "url": "https://phandroid.com/feed/",
+    "category": "Android / 嵌入式",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "AndroidPhoneFans",
+    "aliases": [
+      "AndroidPhoneFans"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "AndroidGuys",
+    "url": "https://androidguys.com/feed/",
+    "category": "Android / 嵌入式",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "AndroidGuys",
+    "aliases": [
+      "AndroidGuys"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Arduino Blog",
+    "url": "https://blog.arduino.cc/feed/",
+    "category": "Android / 嵌入式",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "Arduino Blog",
+    "aliases": [
+      "Arduino Blog"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "CNXSoft",
+    "url": "https://www.cnx-software.com/feed/",
+    "category": "Android / 嵌入式",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "CNXSoft",
+    "aliases": [
+      "CNXSoft"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Engadget",
+    "url": "https://www.engadget.com/feed/",
+    "category": "科技",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "Engadget",
+    "aliases": [
+      "Engadget"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "HackaDay",
+    "url": "https://hackaday.com/feed/",
+    "category": "Android / 嵌入式",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "HackaDay",
+    "aliases": [
+      "HackaDay"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "HackerNewsDaily",
+    "url": "https://www.daemonology.net/hn-daily/index.rss",
+    "category": "科技",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "HackerNewsDaily",
+    "aliases": [
+      "HackerNewsDaily"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "LinuxInsider",
+    "url": "https://linuxinsider.com/feed/",
+    "category": "Linux",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "LinuxInsider",
+    "aliases": [
+      "LinuxInsider"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "MAKE Magazine",
+    "url": "https://makezine.com/feed/",
+    "category": "Android / 嵌入式",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "MAKE Magazine",
+    "aliases": [
+      "MAKE Magazine"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Ray Rischpater Blog",
+    "url": "https://www.lothlorien.com/kf6gpe/feed/",
+    "category": "科技",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "Ray Rischpater Blog",
+    "aliases": [
+      "Ray Rischpater Blog"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "TechCrunch",
+    "url": "https://techcrunch.com/feed/",
+    "category": "科技",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "TechCrunch",
+    "aliases": [
+      "TechCrunch"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Wired Top Stories",
+    "url": "https://www.wired.com/feed/rss",
+    "category": "科技",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "Wired Top Stories",
+    "aliases": [
+      "Wired Top Stories"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Gizmodo",
+    "url": "https://gizmodo.com/feed",
+    "category": "科技",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "Gizmodo",
+    "aliases": [
+      "Gizmodo"
+    ],
+    "lastVerifiedStatus": "failed",
+    "enabled": true
+  },
+  {
+    "name": "Official Android Blog",
+    "url": "https://blog.google/products-and-platforms/platforms/android/rss/",
+    "category": "Android / 嵌入式",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "Official Android Blog",
+    "aliases": [
+      "Official Android Blog"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Planet PostgreSQL",
+    "url": "https://planet.postgresql.org/rss20.xml",
+    "category": "科技",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "Planet PostgreSQL",
+    "aliases": [
+      "Planet PostgreSQL"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Microchip 32bit PIC Microcontrollers (All)",
+    "url": "https://www.microchip.com/RSS/recent-32bitPIC.xml",
+    "category": "Android / 嵌入式",
+    "language": "en",
+    "filter": "user_requested_technical",
+    "preferredByUser": true,
+    "requestedName": "Microchip 32bit PIC Microcontrollers (All)",
+    "aliases": [
+      "Microchip 32bit PIC Microcontrollers (All)"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "CodeOpinion",
+    "url": "https://codeopinion.com/feed/",
+    "category": "科技",
+    "language": "en",
+    "filter": "topic",
+    "preferredByUser": true,
+    "requestedName": "CodeOpinion",
+    "aliases": [
+      "CodeOpinion"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Rogueliker",
+    "url": "https://rogueliker.com/feed/",
+    "category": "Steam 單機",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "preferredByUser": true,
+    "requestedName": "Rogueliker",
+    "aliases": [
+      "Rogueliker"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "AwesomeKotlinWeekly",
+    "url": "https://kotlin.libhunt.com/newsletter/feed",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "preferredByUser": true,
+    "requestedName": "AwesomeKotlinWeekly",
+    "aliases": [
+      "AwesomeKotlinWeekly"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "InfoQ Kotlin",
+    "url": "https://feed.infoq.com/kotlin/",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "preferredByUser": true,
+    "requestedName": "InfoQ Kotlin",
+    "aliases": [
+      "InfoQ Kotlin"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "JavaScriptWeekly",
+    "url": "https://javascriptweekly.com/rss/",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "preferredByUser": true,
+    "requestedName": "JavaScriptWeekly",
+    "aliases": [
+      "JavaScriptWeekly"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "RPGFan",
+    "url": "https://rpgfan.com/feed/",
+    "category": "Steam 單機",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "preferredByUser": true,
+    "requestedName": "RPGFan",
+    "aliases": [
+      "RPGFan"
+    ],
+    "lastVerifiedStatus": "redirect",
+    "enabled": true
+  },
+  {
+    "name": "TurnBasedLovers",
+    "url": "https://turnbasedlovers.com/feed/",
+    "category": "Steam 單機",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "preferredByUser": true,
+    "requestedName": "TurnBasedLovers",
+    "aliases": [
+      "TurnBasedLovers"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "WayTooManyGames",
+    "url": "https://waytoomany.games/feed/",
+    "category": "Steam 單機",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "preferredByUser": true,
+    "requestedName": "WayTooManyGames",
+    "aliases": [
+      "WayTooManyGames"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "JetBrains Kotlin",
+    "url": "https://blog.jetbrains.com/kotlin/feed/",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "preferredByUser": true,
+    "requestedName": "JetBrains Kotlin",
+    "aliases": [
+      "JetBrains Kotlin"
+    ],
+    "lastVerifiedStatus": "blocked",
+    "enabled": true
+  },
+  {
+    "name": "r/Kotlin",
+    "url": "https://www.reddit.com/r/Kotlin/.rss",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "preferredByUser": true,
+    "requestedName": "r/Kotlin",
+    "aliases": [
+      "r/Kotlin"
+    ],
+    "lastVerifiedStatus": "blocked",
+    "enabled": true
+  },
+  {
+    "name": "A!@attrip",
+    "url": "https://attrip.jp/feed/",
+    "category": "科技",
+    "language": "ja",
+    "filter": "interest_match",
+    "preferredByUser": true,
+    "requestedName": "A!@attrip",
+    "aliases": [
+      "A!@attrip"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Gea-Suan Lin's BLOG",
+    "url": "https://blog.gslin.org/feed/",
+    "category": "科技",
+    "language": "zh-Hant",
+    "filter": "interest_match",
+    "preferredByUser": true,
+    "requestedName": "Gea-SuanLinBLOG",
+    "aliases": [
+      "Gea-Suan Lin's BLOG",
+      "Gea-SuanLinBLOG"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Jedi's BLOG",
+    "url": "https://jedi.org/blog/atom.xml",
+    "category": "科技",
+    "language": "zh-Hant",
+    "filter": "interest_match",
+    "preferredByUser": true,
+    "requestedName": "JediBLOG",
+    "aliases": [
+      "Jedi's BLOG",
+      "JediBLOG"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Solidot",
+    "url": "https://www.solidot.org/index.rss",
+    "category": "科技",
+    "language": "zh-Hans",
+    "filter": "interest_match",
+    "preferredByUser": true,
+    "requestedName": "Solidot",
+    "aliases": [
+      "Solidot"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "tEre-tErRiTOrY",
+    "url": "https://blog.terewong.com/feed",
+    "category": "科技",
+    "language": "zh-Hant",
+    "filter": "interest_match",
+    "preferredByUser": true,
+    "requestedName": "tEre-tErRiTOrY",
+    "aliases": [
+      "tEre-tErRiTOrY"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Yifan Lu",
+    "url": "https://yifan.lu/feed.xml",
+    "category": "科技",
+    "language": "en",
+    "filter": "interest_match",
+    "preferredByUser": true,
+    "requestedName": "YifanLu",
+    "aliases": [
+      "Yifan Lu",
+      "YifanLu"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Google Blog",
+    "url": "https://blog.google/rss/",
+    "category": "科技",
+    "language": "en",
+    "filter": "interest_match",
+    "preferredByUser": true,
+    "requestedName": "OfficialGoogleBlog",
+    "aliases": [
+      "Google Blog",
+      "OfficialGoogleBlog"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "UNWIRE.HK",
+    "url": "https://unwire.hk/feed/",
+    "category": "科技",
+    "language": "zh-Hant",
+    "filter": "interest_match",
+    "preferredByUser": true,
+    "requestedName": "UNWIRE.HK",
+    "aliases": [
+      "UNWIRE.HK"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "愛范兒",
+    "url": "https://www.ifanr.com/feed",
+    "category": "科技",
+    "language": "zh-Hans",
+    "filter": "interest_match",
+    "preferredByUser": true,
+    "requestedName": "爱范儿Beats of Bits",
+    "aliases": [
+      "愛范兒",
+      "爱范儿Beats of Bits"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": false,
+    "id": "ifanr",
+    "rightsStatus": "unverified_current_license",
+    "rightsCheckedAt": "2026-10-13",
+    "disabledReason": "rights_pending: current RSS republication license unverified; language exception implemented but held pending rights verification."
+  },
+  {
+    "name": "Engadget 中文版",
+    "url": "https://chinese.engadget.com/rss.xml",
+    "category": "科技",
+    "language": "zh-Hant",
+    "filter": "interest_match",
+    "preferredByUser": true,
+    "requestedName": "Engadget中文版",
+    "aliases": [
+      "Engadget中文版",
+      "Engadget 中文版"
+    ],
+    "lastVerifiedStatus": "failed",
+    "enabled": true
+  },
+  {
+    "name": "Salmon Run",
+    "url": "https://sujitpal.blogspot.com/feeds/posts/default",
+    "category": "科技",
+    "language": "en",
+    "filter": "interest_match",
+    "preferredByUser": true,
+    "requestedName": "SalmonRun",
+    "aliases": [
+      "SalmonRun",
+      "Salmon Run"
+    ],
+    "lastVerifiedStatus": "verified",
+    "enabled": true
+  },
+  {
+    "name": "Splattercatgaming",
+    "url": "https://www.youtube.com/feeds/videos.xml?channel_id=UC8nZUXCwCTffxthKLtOp6ng",
+    "category": "單機遊戲",
+    "language": "en",
+    "filter": "pc_singleplayer_nonfps",
+    "kind": "youtube-rss",
+    "preferredByUser": true,
+    "enabled": true
+  },
+  {
+    "name": "Azul",
+    "url": "https://www.azul.com/feed/",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Open Liberty",
+    "url": "https://openliberty.io/feed.xml",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "NodeSource",
+    "url": "https://nodesource.com/blog/rss",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Node Weekly",
+    "url": "https://nodeweekly.com/rss/",
+    "category": "Rust / Node.js",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Linux Foundation",
+    "url": "https://www.linuxfoundation.org/blog/rss.xml",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Fedora Community Blog",
+    "url": "https://communityblog.fedoraproject.org/feed/",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "openSUSE News",
+    "url": "https://news.opensuse.org/feed.xml",
+    "category": "Linux",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "OpenSSF",
+    "url": "https://openssf.org/feed/",
+    "category": "資安",
+    "language": "en",
+    "filter": "major_oss_security",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Trail of Bits",
+    "url": "https://blog.trailofbits.com/index.xml",
+    "category": "資安",
+    "language": "en",
+    "filter": "major_oss_security",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Chainguard",
+    "url": "https://www.chainguard.dev/unchained/rss.xml",
+    "category": "資安",
+    "language": "en",
+    "filter": "major_oss_security",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "PyTorch",
+    "url": "https://pytorch.org/blog/feed/",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "NVIDIA Developer",
+    "url": "https://developer.nvidia.com/blog/feed/",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Microsoft Agent Framework",
+    "url": "https://devblogs.microsoft.com/agent-framework/feed/",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Gradle",
+    "url": "https://blog.gradle.org/feed.atom",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Apache Camel",
+    "url": "https://camel.apache.org/blog/index.xml",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "WildFly",
+    "url": "https://www.wildfly.org/feed.xml",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Microsoft Java",
+    "url": "https://devblogs.microsoft.com/java/feed/",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Micronaut",
+    "url": "https://micronaut.io/rss.xml",
+    "category": "Java / Kotlin",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "Micronaut Security",
+    "url": "https://micronaut.io/security-announcements/rss.xml",
+    "category": "資安",
+    "language": "en",
+    "filter": "major_oss_security",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "name": "vLLM",
+    "url": "https://vllm.ai/blog/rss.xml",
+    "category": "AI",
+    "language": "en",
+    "filter": "topic",
+    "discussionSource": false,
+    "enabled": true,
+    "lastVerifiedStatus": "verified",
+    "verifiedAt": "2026-10-05"
+  },
+  {
+    "id": "elixir-official",
+    "name": "Elixir 官方部落格",
+    "url": "https://elixir-lang.org/atom.xml",
+    "category": "Elixir / Erlang",
+    "language": "en",
+    "attributionUrl": "https://elixir-lang.org/blog/",
+    "contentLicense": "Apache-2.0",
+    "termsUrl": "https://github.com/elixir-lang/elixir-lang.github.com#license",
+    "enabled": true,
+    "lastVerifiedStatus": "valid_dated_feed",
+    "lastVerifiedAt": "2026-10-13",
+    "filter": "topic",
+    "preferredByUser": true
+  },
+  {
+    "id": "erlang-news",
+    "name": "Erlang 官方消息",
+    "url": "https://www.erlang.org/news.xml",
+    "category": "Elixir / Erlang",
+    "language": "en",
+    "attributionUrl": "https://www.erlang.org/news",
+    "contentLicense": "Apache-2.0",
+    "termsUrl": "https://github.com/erlang/erlang-org/blob/master/LICENSE",
+    "enabled": true,
+    "lastVerifiedStatus": "valid_dated_feed",
+    "lastVerifiedAt": "2026-10-13",
+    "filter": "topic",
+    "preferredByUser": true
+  },
+  {
+    "id": "erlang-blog",
+    "name": "Erlang 官方部落格",
+    "url": "https://www.erlang.org/blog.xml",
+    "category": "Elixir / Erlang",
+    "language": "en",
+    "attributionUrl": "https://www.erlang.org/blog",
+    "contentLicense": "Apache-2.0",
+    "termsUrl": "https://github.com/erlang/erlang-org/blob/master/LICENSE",
+    "enabled": true,
+    "lastVerifiedStatus": "valid_dated_feed",
+    "lastVerifiedAt": "2026-10-13",
+    "filter": "topic",
+    "preferredByUser": true
+  },
+  {
+    "id": "bbc-world",
+    "name": "BBC News",
+    "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+    "category": "World / 國際",
+    "language": "en",
+    "preservePublisherText": true,
+    "attributionUrl": "https://www.bbc.co.uk/news/world",
+    "sourceBrandImage": "https://news.bbcimg.co.uk/nol/shared/img/bbc_news_120x60.gif",
+    "termsUrl": "https://www.bbc.co.uk/usingthebbc/terms-of-use/#15metadataandrssfeeds",
+    "enabled": true,
+    "lastVerifiedStatus": "valid_dated_feed",
+    "lastVerifiedAt": "2026-10-13",
+    "filter": "topic",
+    "preferredByUser": true
+  },
+  {
+    "id": "yahoo-hk",
+    "name": "Yahoo 新聞香港（彙整）",
+    "url": "https://hk.news.yahoo.com/rss/hong-kong",
+    "category": "香港",
+    "language": "zh-HK",
+    "preservePublisherText": true,
+    "attributionUrl": "https://hk.news.yahoo.com/",
+    "sourceBrandImage": "https://s.yimg.com/rz/d/yahoo_news_zh-Hant-HK_s_f_p_bestfit_news.png",
+    "termsUrl": "https://legal.yahoo.com/tw/zh-hant/yahoo/terms/otos/index.html",
+    "enabled": true,
+    "lastVerifiedStatus": "valid_dated_feed",
+    "lastVerifiedAt": "2026-10-13",
+    "filter": "topic",
+    "preferredByUser": true
+  },
+  {
+    "id": "dw-world",
+    "name": "DW World",
+    "url": "https://rss.dw.com/rdf/rss-en-world",
+    "category": "World / 國際",
+    "language": "en",
+    "enabled": false,
+    "disabledReason": "rights_pending: no public World-feed republication permission verified; partner service terms require an agreement.",
+    "termsUrl": "https://www.dw.com/en/general-terms-and-conditions-german-news-service/a-18507160",
+    "lastVerifiedStatus": "valid_dated_feed",
+    "lastVerifiedAt": "2026-10-13",
+    "filter": "topic",
+    "preferredByUser": true
+  },
+  {
+    "id": "aljazeera-en",
+    "name": "Al Jazeera English",
+    "url": "https://www.aljazeera.com/xml/rss/all.xml",
+    "category": "World / 國際",
+    "language": "en",
+    "enabled": false,
+    "disabledReason": "rights_pending: current terms restrict automated extraction and republication without permission.",
+    "termsUrl": "https://terms.aljazeera.net/index.html",
+    "lastVerifiedStatus": "valid_dated_feed",
+    "lastVerifiedAt": "2026-10-13",
+    "filter": "topic",
+    "preferredByUser": true
+  },
+  {
+    "id": "france24-en",
+    "name": "France 24 English",
+    "url": "https://www.france24.com/en/rss",
+    "category": "World / 國際",
+    "language": "en",
+    "enabled": false,
+    "disabledReason": "rights_pending: legal notice limits reuse to personal/private and restricts republication.",
+    "termsUrl": "https://www.francemm.com/en/legal-notice",
+    "lastVerifiedStatus": "valid_dated_feed",
+    "lastVerifiedAt": "2026-10-13",
+    "filter": "topic",
+    "preferredByUser": true
+  }
+]

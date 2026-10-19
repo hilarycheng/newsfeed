@@ -1,0 +1,82 @@
+[
+  {
+    "id": "steam-hk-specials",
+    "name": "Steam 香港特價",
+    "kind": "store-search",
+    "url": "https://store.steampowered.com/search/?specials=1&cc=hk",
+    "language": "en",
+    "priority": "highest",
+    "status": "verified",
+    "checkedAt": "2026-10-04T01:34:00Z",
+    "policy": "Use current cc=hk product-page prices; only PC games with single-player support and no FPS/esports/LoL. Store catalog is mixed; inspect individual games rather than subscribe all. Label checked time, never invent publication time. Sale end date may lack timezone."
+  },
+  {
+    "id": "splattercatgaming",
+    "name": "Splattercatgaming",
+    "kind": "youtube-rss",
+    "channelId": "UC8nZUXCwCTffxthKLtOp6ng",
+    "url": "https://www.youtube.com/@Splattercatgaming",
+    "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC8nZUXCwCTffxthKLtOp6ng",
+    "language": "en",
+    "status": "verified-live",
+    "checkedAt": "2026-10-04T01:34:00Z",
+    "latestPublishedAt": "2026-10-03T18:43:55Z",
+    "policy": "Strong indie PC discovery. Filter each game: channel occasionally covers FPS. Summaries grounded in RSS description; do not imply watched video."
+  },
+  {
+    "id": "retromation",
+    "name": "Retromation",
+    "kind": "youtube-rss",
+    "channelId": "UC4Xj6emHTXnKHUq8btUuN6A",
+    "url": "https://www.youtube.com/@Retromation",
+    "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC4Xj6emHTXnKHUq8btUuN6A",
+    "language": "en",
+    "status": "channel-verified-feed-404",
+    "checkedAt": "2026-10-04T01:34:00Z",
+    "policy": "Channel metadata explicitly specializes in roguelikes and indie discovery; filter multiplayer-only series and excluded genres. Feed currently returns 404; do not mark active."
+  },
+  {
+    "id": "best-indie-games",
+    "name": "Best Indie Games",
+    "kind": "youtube-rss",
+    "channelId": "UCCd3jyJmOFzkJEMj5Bp89rw",
+    "url": "https://www.youtube.com/@clemmygames",
+    "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCCd3jyJmOFzkJEMj5Bp89rw",
+    "language": "en",
+    "status": "channel-verified-feed-errors-404-and-500",
+    "checkedAt": "2026-10-04T01:34:00Z",
+    "policy": "Discovery roundups; mixed platforms/games require review. Actual YouTube page verifies ID; feed retrieval currently 404."
+  },
+  {
+    "id": "bahagamecrazy",
+    "name": "巴哈姆特電玩瘋",
+    "kind": "youtube-rss",
+    "channelId": "UC4c-wTOqEID-_vH4MhNs06w",
+    "url": "https://www.youtube.com/channel/UC4c-wTOqEID-_vH4MhNs06w",
+    "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UC4c-wTOqEID-_vH4MhNs06w",
+    "language": "zh-Hant",
+    "status": "channel-verified-feed-500",
+    "checkedAt": "2026-10-04T01:34:00Z",
+    "policy": "Traditional Chinese mixed gaming outlet; only PC single-player individual-game items. Review broad roundups; exclude mobile, esports, FPS, console-only. Feed returns 500; do not mark active."
+  },
+  {
+    "id": "steam-new-releases",
+    "name": "Steam New On Steam",
+    "kind": "rss",
+    "feedUrl": "https://store.steampowered.com/feeds/newreleases.xml",
+    "status": "reachable-stale",
+    "latestPublishedAt": "2026-07-11T21:59:51Z",
+    "checkedAt": "2026-10-04T01:34:00Z",
+    "policy": "Do not use for 72h freshness; latest entry is July 11."
+  },
+  {
+    "id": "steam-daily-deals",
+    "name": "Steam Daily Deals RSS",
+    "kind": "rss",
+    "feedUrl": "https://store.steampowered.com/feeds/daily_deals.xml",
+    "status": "reachable-stale",
+    "latestPublishedAt": "2020-02-18T18:29:00Z",
+    "checkedAt": "2026-10-04T01:34:00Z",
+    "policy": "Do not use as live deal provider. RSS1 XML has latest deal in February 2020; use current Hong Kong store pages instead."
+  }
+]
