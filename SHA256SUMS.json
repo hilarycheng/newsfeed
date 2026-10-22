@@ -1,8 +1,8 @@
 {
-  ".gitignore": "c5cb2a0812d72f467b8e00431dd157a429212bcd1f5002444b91108668e8f720",
+  ".gitignore": "793ec6ed8efbbb131bd616f954a31857d64c09d9596b4a7a13bc12a14bd11d0f",
   "Cargo.lock": "7ea1f05ee01df2127697936ad450a34b51bee349b916dbea2f6946022a8714d4",
   "Cargo.toml": "06871ae0b61dc5c5748b493d861f391f6d32bb62859f73227839881a761c3484",
-  "README.md": "11d841341e9bc422786e3b0ff9bc8bbb50529be4520595bc975f4520fe5c0611",
+  "README.md": "468ff21e4b236edb0b27a4fe879b292f3962acd556ef1f073d08dcf073fe81f6",
   "SOURCE_POLICY.md": "14cf592d6349f68559dc1942f0fd6b624b1cb9715b8dbd5a2afd6f2dbd6ce376",
   "app/globals.css": "01d28fbf03037d15c6890eb0c804f56fbcea8ca1500ab52bdde2bf615fcc2a5d",
   "app/index.html": "9e664e9fa38ff08d876ce12e2d44623384bafe390cd042733372d0fceeb6a641",
@@ -33,6 +33,7 @@
   "scripts/test-cve-json.py": "8177f662c1f0801a3c477007dbfbc9dce777f83a034836ed655ec6abb1f8ff16",
   "scripts/test-cve-transport.py": "8eb4f6920c309a52cb4518780e012bf502530cec364f415a7f7ee255e3e1345e",
   "scripts/test-feeder.py": "8a7bbb6d1b5147f2987165d2610c3c9c0c4bda4a3f9c96ad7ea1ff8d0d32c21e",
+  "scripts/test-publish.py": "1f799893bc692204dca389e53b950f461878935cfe152096dc0407b587aa0355",
   "scripts/test-source-gateway.py": "e575654c5c9d621a52211be04ecc5b60a31dd74d68bf97609c5bb906bc271cab",
   "scripts/test-source-health.py": "428b54cab0adc0493a049fcc56178dcc9ed8605694cea2dc3fc1747dc5e950a8",
   "scripts/test-source-holds.py": "413895c0ef089b1a1276a0cef2600b74363cec9c66c08ce379c78bde589b27dc",
@@ -50,5 +51,5 @@
   "src/steam.rs": "af328c4cd7d0694b8eb1c6533a2fa0f80f45c0c13185c6e62bacc5396d4d3d40",
   "tests/console.rs": "12cdc158286700926c0e0aec9ea6a95d8c04ec9bd9a96214e451e85ba828e205",
   "tests/reader.js": "7bb9867b5b1f94a984fee706feefd01fc213d522cf6c69a8a18a292c290cdb07",
-  "update_news.sh": "c559b7212a5f207c7ed04522879832d34d4905b66a64d054dbef2aaf542c2a45"
+  "update_news.sh": "710731ca422e8cf9519b41c8725af8cac01c9e6a55c3b2150ff1568787f8146a"
 }

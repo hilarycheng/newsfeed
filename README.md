@@ -84,7 +84,75 @@ Cloud computer 接收已生成嘅靜態檔案，唔需要重跑 feeder 或 build
 HTML 可以直接開檔，亦可以放喺 GitHub Pages 嘅發布目錄。
 用 branch 發布時，可喺發布目錄加入空白 `.nojekyll` 標記；毋須上傳 CSS／JS 或在 GitHub 執行 Rust。
 舊有 `dist/feed.json`、`update-plan.json` 同 `_headers` 已停止輸出；外部複製流程需要改為核對 HTML，hosting headers 由平台管理。
-呢個專案唔包含傳送憑證、自動複製、部署或排程設定。
+SSH 憑證同 cron 排程留喺屋企，唔放入 repo。
+
+## 屋企 cron → GitHub Pages
+
+`update_news.sh` 更新新聞後，會將單一 HTML 發布到公開 repo：
+[hilarycheng/newsfeed](https://github.com/hilarycheng/newsfeed)。
+發布網址：[hilarycheng.github.io/newsfeed](https://hilarycheng.github.io/newsfeed/)。
+需要先完成下方 Pages 設定，網址先會生效。
+
+Wrapper 需要 Linux、Bash、Git、OpenSSH、`jq`、`flock` 同 `sha256sum`。
+Feeder 本身仍然只需要 Rust 執行檔，唔需要 Node.js 或 Python。
+修改 Rust／UI 後先執行 `./build.sh`；cron 唔會自動重新編譯。
+
+### 首次設定
+
+1. 喺屋企用執行 cron 嘅同一個帳戶，確認現有 `hilary.git` SSH alias 可無人值守連線：
+
+   ```sh
+   env -u SSH_AUTH_SOCK GIT_SSH_COMMAND='ssh -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15' git ls-remote git@hilary.git:hilarycheng/newsfeed.git
+   ```
+
+   呢部機嘅 alias 指向 `github.com`，使用 `~/.ssh/git_hilary`。
+   Private key、SSH config 同已核實嘅 GitHub host key 要由 cron 帳戶存取。
+   指令 exit code 0 代表讀取成功；空 repo 可以冇輸出。Write 權限由下一步實際 push 驗證。
+   唔好關閉 host key 驗證；新機應先按 [GitHub 官方指紋](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints) 核實。
+
+2. 用現有 `data/feed.json` 生成 HTML，並完成首次 push：
+
+   ```sh
+   cd /home/hilary/Projects/news-feed-offline-review
+   ./build.sh
+   ./update_news.sh --build-only
+   ```
+
+   呢一步唔重新讀取新聞。冇現有快照時，改用 `./update_news.sh`。
+   Script 自動建立 `.sites-runtime/pages/` 獨立 clone，發布到 `main`。
+   唔需要將 Rust source repo 嘅 remote 改成呢個公開 repo。
+   發布 commit 使用 `hilarycheng` 同 GitHub noreply email，唔公開私人 email。
+
+3. 開啟 [repo Pages 設定](https://github.com/hilarycheng/newsfeed/settings/pages)。
+   選擇 **Deploy from a branch** → **main** → **/(root)** → **Save**。
+   GitHub 完成部署後，網站先會更新。
+   `.nojekyll` 令 GitHub 直接發布已生成嘅檔案，唔需要自訂 workflow。
+   詳情見 [GitHub 官方設定指引](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)。
+
+4. 用 `crontab -e` 修改現有 job，保留原本五個排程欄位。
+   將後面嘅 command 設為：
+
+   ```sh
+   /home/hilary/Projects/news-feed-offline-review/update_news.sh >> /home/hilary/Projects/news-feed-offline-review/.sites-runtime/publish.log 2>&1
+   ```
+
+   沿用同一個 Linux 帳戶，唔好改用 root。首次設定已建立 log 目錄。
+   cron 只需 `/usr/bin:/bin` PATH；唔需要載入互動 shell 或 SSH agent。
+   正常排程唔加 `--build-only`，每次會更新來源再發布。
+   呢個專案唔會自動改動 crontab 或新增排程。
+
+### 發布與失敗處理
+
+- `flock` 鎖住整個更新、commit、push 流程；重疊執行會直接以 exit code `75` 結束。
+- Feeder 必須成功，結果必須係 `success`，複製出嚟嘅 HTML 必須符合結果內嘅 SHA-256。
+- 只 stage `index.html` 同空白 `.nojekyll`。CSS、JS 同資料內嵌喺 HTML；圖片仍用外部網址。
+- HTML 冇變就唔建立新 commit；每次仍會 push，重試上次未送出嘅 commit。
+- Push 失敗會返回非零 exit code，GitHub 保留上一版；本機 commit 留待下次重試。
+- 遠端更新只接受 fast-forward。分支分歧時停止，唔會 force push 或刪除歷史；需先人工處理 clone 嘅分支。
+- 發現 clone 有額外 tracked file 會停止，避免將本機資料加入網站。
+
+先查 `.sites-runtime/publish.log`，再查 `.sites-runtime/feeder-result.json` 同 `feeder.log`。
+HTML 同佢內嵌嘅閱讀資料會公開；原始 `data/`、config、憑證、Rust source 同執行檔唔會上傳。
 
 ## 本機資料
 
@@ -105,6 +173,14 @@ cargo test --locked
 Rust tests 使用合成 RSS／Atom、Steam fixture、CVE record 同暫存目錄。
 包括 cache → feed → 單一 HTML、空白 PATH 執行、資料 escaping、體積上限，以及 build 失敗後保留上一期嘅測試。
 Tests 唔會讀取真實來源。`--from-cache` 需要有效 intake，唔係測試指令。
+
+發布流程嘅離線測試使用假 feeder 同真實本機 Git bare repo，唔連線 GitHub：
+
+```sh
+python3 scripts/test-publish.py
+```
+
+涵蓋檔案白名單、無變更、失敗結果、checksum、重疊執行同 push 重試。Python 只用於呢個開發測試。
 
 安裝 Chrome／Chromium 後，可執行真實瀏覽器 fixture 測試：
 
