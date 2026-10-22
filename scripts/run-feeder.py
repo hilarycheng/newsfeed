@@ -133,16 +133,14 @@ def main():
   cards=sorted(cards,key=lambda a:a.get('freshnessAt') or a['publishedAt'],reverse=True)[:1200]
   feed={'updatedAt':NOW.isoformat().replace('+00:00','Z'),'editionDate':NOW.astimezone(dt.timezone(dt.timedelta(hours=8))).date().isoformat(),'stories':cards,'sourceStatus':statuses,'intake':{'cached':cached,'rssFetchedAt':raw['fetchedAt'],'steamFetchedAt':min(row['lastAttemptAt'] for row in deals),'partial':any(x['status']!='ok' for x in statuses)},'note':('本期沿用已完成的來源讀取（RSS '+raw['fetchedAt']+'）；並未重新讀取全部來源。 ' if cached else '')+'自動 RSS 整理：標題與短摘錄取自來源，未經 AI 改寫。規則篩選可能有遺漏；討論時間不代表原文日期。','editorialStats':{'medium':0,'total':len(cards),'modelCalls':0}}
   stage='build';target.write_text(json.dumps(feed,ensure_ascii=False))
-  r=subprocess.run(['node','scripts/build-static.mjs'],cwd=ROOT,capture_output=True,text=True,timeout=90);log.append(r.stdout+r.stderr)
+  r=subprocess.run([str(ROOT/'news-feeder'),'--build-only'],cwd=ROOT,capture_output=True,text=True,timeout=90);log.append(r.stdout+r.stderr)
   if r.returncode:raise RuntimeError('Static build failed')
-  r=subprocess.run(['node','--check','dist/reader.js'],cwd=ROOT,capture_output=True,text=True,timeout=20)
-  if r.returncode:raise RuntimeError('Reader syntax check failed')
   stage='validation';r=subprocess.run([sys.executable,'scripts/verify-feeder.py'],cwd=ROOT,capture_output=True,text=True,timeout=30);log.append(r.stdout+r.stderr)
   if r.returncode:raise RuntimeError('Final publication validation failed')
-  result={'status':'success','rssHealth':rss_counts,'partial':any(x['status']!='ok' for x in statuses),'cached':cached,'rssFetchedAt':raw['fetchedAt'],'itemCount':len(cards),'sourceCount':len(statuses),'failureCount':len(statuses)-good,'failedSources':[s['name'] for s in statuses if s['status'] in ['failed','skipped']][:8],'limitedSourceCount':sum(s['status']=='limited' for s in statuses),'dealCount':sum(a.get('kind')=='deal' for a in cards),'cveCount':sum(bool(a.get('cveIds')) for a in cards),'cveJSON':cve_counts,'modelCalls':0,'artifact':'dist/index.html','sha256':hashlib.sha256((ROOT/'dist/feed.json').read_bytes()).hexdigest()}
+  result={'status':'success','rssHealth':rss_counts,'partial':any(x['status']!='ok' for x in statuses),'cached':cached,'rssFetchedAt':raw['fetchedAt'],'itemCount':len(cards),'sourceCount':len(statuses),'failureCount':len(statuses)-good,'failedSources':[s['name'] for s in statuses if s['status'] in ['failed','skipped']][:8],'limitedSourceCount':sum(s['status']=='limited' for s in statuses),'dealCount':sum(a.get('kind')=='deal' for a in cards),'cveCount':sum(bool(a.get('cveIds')) for a in cards),'cveJSON':cve_counts,'modelCalls':0,'artifact':'dist/index.html','sha256':hashlib.sha256((ROOT/'dist/index.html').read_bytes()).hexdigest()}
  except Exception as e:
   target.write_bytes(old)
-  subprocess.run(['node','scripts/build-static.mjs'],cwd=ROOT,capture_output=True,timeout=90)
+  subprocess.run([str(ROOT/'news-feeder'),'--build-only'],cwd=ROOT,capture_output=True,timeout=90)
   result={'status':'failure','stage':stage,'errorType':type(e).__name__,'rssHealth':rss_counts,'error':str(e)[:180],'preservedPreviousEdition':True,'modelCalls':0,'cveJSON':locals().get('cve_counts',{'status':'failure'})}
  (runtime/'feeder.log').write_text('\n'.join(log));(runtime/'feeder-result.json').write_text(json.dumps(result));print(json.dumps(result));return 0 if result['status']=='success' else 1
 if __name__=='__main__':sys.exit(main())

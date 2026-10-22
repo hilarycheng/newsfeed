@@ -1,16 +1,16 @@
 # News Feed
 
-A public, static, read-only mobile news reader. The deployed bundle has no Worker, database binding, web updater, intake endpoint, administrative route, or custom update key. Content is generated on the assistant's cloud computer and published using the normal Sites source/build/deploy workflow.
+A public, static, read-only mobile news reader. The deployed bundle has no Worker, database binding, web updater, intake endpoint, administrative route, or custom update key. Content is generated locally by the Rust feeder and published as one self-contained HTML file. No source intake runs in the hosted page.
 
 ## Compact deterministic refresh
 
 The existing enabled schedule runs at the user-requested 06:30, 07:00, 12:00 and 17:00 Asia/Hong_Kong daily (updated 2026-10-13; the previous 12:30 run is replaced). Do not create another schedule. The engine makes zero model/API calls. The wrapper only launches the command, reads its compact status, and performs standard Sites publication. It must not read/review/rewrite individual articles.
 
-1. Open this same Site using get_site and the official source workflow with its ordinary short-lived Git credential. Preserve public access and the existing Site ID.
-2. Run `python scripts/run-feeder.py`. Stdout is one compact JSON record. All fetch/build logs are in ignored .sites-runtime/feeder.log. The command fetches all enabled registered feeds and the configured Steam Hong Kong offers and official CVE List V5 JSON deltas, applies deterministic rules and creates data/feed.json plus dist/index.html and read-only assets. No OpenAI or other model service is called.
-3. If status=failure or the command exits nonzero, do not publish. The previous data and static build are restored. Report only a persistent actionable blocker; never substitute AI editorial work. Source success below70% or fewer than30 eligible stories is a failure. Individual source failures are disclosed. Missing descriptions use the original title, not an invented summary.
-4. On success, run `python scripts/test-feeder.py`, `python scripts/test-steam-lifecycle.py`, `python scripts/test-cve-json.py`, `python scripts/test-source-isolation.py`, `python scripts/test-source-gateway.py`, `python scripts/test-cve-transport.py` and `node --test --test-skip-pattern=Chromium scripts/test-reader.mjs` (deterministic fixture-only checks) and standard Sites packaging with `node scripts/build-static.mjs` and `node --check dist/reader.js` and `python scripts/verify-feeder.py` (compact validation). Save the exact pushed commit/archive and deploy the public version. Check native deployment status until succeeded. Do not add website write endpoints or custom credentials.
-5. Do not emit a daily chat digest. The compact result includes status,itemCount,sourceCount,failureCount,dealCount,cveJSON (status/success/skips/errors/pending),modelCalls=0,artifact,sha256. The published update-plan provides the same minimal instruction.
+1. Run the compiled Rust `news-feeder` locally. It performs the registered RSS, Steam and CVE intake, then generates `data/feed.json` and a single public `dist/index.html`.
+2. If status is failure or the process exits nonzero, preserve the previous publication. Source success below 70% or fewer than 30 eligible stories remains a failure. Individual source failures are disclosed.
+3. On success, verify the result's `sha256` against `dist/index.html` before copying that file. Keep `data/`, config, and `.sites-runtime/` local. Publishing credentials and schedules are outside this repository.
+4. Validate changes using `cargo test --locked`. Browser fixture QA uses `cargo test --locked browser_reader -- --ignored` with local Chrome/Chromium, without Node.js. No tests fetch publisher content.
+5. The compact result retains status, itemCount, sourceCount, failureCount, dealCount, cveJSON, modelCalls=0, artifact and sha256. The checksum now identifies the HTML. The former public feed.json, update-plan.json and _headers are not emitted.
 
 ### Deterministic limitations
 
@@ -18,13 +18,15 @@ RSS titles and publisher excerpts stay in their original language. No AI transla
 
 ## Files
 
-- data/feed.json: authoritative published snapshot, versioned in Site source
+- data/feed.json: local authoritative snapshot; not a public asset
 - config/source-registry.json: public source registry
 - scripts/fetch-news.py: cloud-local public RSS intake
-- scripts/build-static.mjs: static bundle generator
+- src/render.rs: Rust template renderer and single-file publisher
+- app/index.html: HTML template
+- app/reader.js: browser-only renderer and interactions
 - app/globals.css: reader stylesheet used by the generator
-- public/favicon.svg: reader icon
-- dist/: generated, read-only publication assets
+- public/favicon.svg: reader icon embedded as a data URL
+- dist/index.html: the only generated publication asset
 
 Only the documented ordinary Sites publishing path can change the hosted content. Never restore the former PUT /api/feed, /api/intake or app-level authentication key route.
 
@@ -47,7 +49,7 @@ Added 20 verified publisher feeds, including Open Liberty, Gradle, Apache Camel,
 
 ## 2026-10-13 reader and source upgrade (authoritative current policy)
 
-- Production runs `scripts/build-static.mjs` and copies `app/globals.css`; the retained React components are not the active renderer.
+- Production runs the Rust renderer. HTML, CSS, reader JavaScript, compact display data, favicon and required license text are embedded in one HTML file. External images retain HTTPS URLs. Templates/assets are embedded in the executable at compile time. Node.js is not required for build, execution or tests.
 - Desktop cards target 448 px. A 1920 px viewport has four columns, 1440 px three, and 1024 px two. The existing small-screen card layout is unchanged; archive headings span every grid column.
 - All is the default. Accessible All / Tech / World / Hong Kong / Steam / CVE buttons filter the entire eligible dataset before pagination. Changing filters resets the visible count, page and infinite-scroll observer. Steam means deals only. CVE uses structured validated CVE IDs populated only after the existing conservative security selection passes.
 - Elixir / Erlang is a technology category. Direct Elixir/Erlang mentions qualify; ambiguous OTP, Phoenix, Hex and BEAM require programming ecosystem context or an already verified Elixir/Erlang source. Official feeds may remain empty in the rolling window when no recent release was published.
@@ -64,7 +66,7 @@ Legacy offers have no trustworthy discovery history. The first migration uses it
 
 Routine refreshes fetch and apply this documented engine only. The approval for this upgrade does not authorize future source expansion, policy changes, translations, AI editorial review, API accounts or app-level write endpoints.
 
-Full optional browser fixture QA: `node --test scripts/test-reader.mjs`. It uses synthetic articles only and requires a working Chromium/Playwright environment; do not claim browser validation from unit-only results.
+Optional browser fixture QA: `cargo test --locked browser_reader -- --ignored`. It uses synthetic articles and local Chrome/Chromium. Set CHROME_BIN if needed; do not claim browser validation from unit-only results.
 
 
 ### Official CVE JSON intake

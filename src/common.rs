@@ -7,12 +7,23 @@ use std::{
     fs,
     io::Write,
     path::Path,
-    sync::{LazyLock, Mutex},
+    sync::{
+        LazyLock, Mutex,
+        atomic::{AtomicBool, Ordering},
+    },
     thread,
 };
 
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
 pub type Time = DateTime<Utc>;
+
+pub static QUIET: AtomicBool = AtomicBool::new(false);
+
+pub fn progress(message: std::fmt::Arguments<'_>) {
+    if !QUIET.load(Ordering::Relaxed) {
+        eprintln!("{message}");
+    }
+}
 
 pub fn s<'a>(value: &'a Value, key: &str) -> &'a str {
     value[key].as_str().unwrap_or("")

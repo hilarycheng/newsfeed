@@ -116,7 +116,7 @@ class CVEIntegration(unittest.TestCase):
    (root/'.sites-runtime/candidates.json').write_text(json.dumps({'fetchedAt':(e.dt.datetime.now(e.UTC)-e.dt.timedelta(hours=2)).isoformat() if stale_cache else now,'candidates':cards,'sourceStatus':[{'name':'Fixture' if i==0 else str(i),'status':'ok'} for i in range(10)]}))
    (root/'.sites-runtime/steam-deal-candidates.json').write_text(json.dumps([{'status':'not_on_sale','lastAttemptAt':now}]))
    def run(args,**kwargs):
-    if args[:2]==['node','scripts/build-static.mjs']:(root/'dist/feed.json').write_bytes((root/'data/feed.json').read_bytes())
+    if args[:2]==[str(root/'news-feeder'),'--build-only']:(root/'dist/index.html').write_text('<!doctype html><title>Fixture</title>')
     return types.SimpleNamespace(stdout='',stderr='',returncode=1 if validation_failure and args[-1]=='scripts/verify-feeder.py' else 0)
    with m.patch.object(e,'ROOT',root),m.patch.object(e,'normalize',side_effect=lambda a:a),m.patch.object(e,'select_visible_deals',return_value=[]),m.patch.object(e,'merge_cards',side_effect=lambda cards,state,now:cards) as merge,m.patch.object(e,'refresh_cve_json',return_value=refresh_result or state['lastResult']) as refresh,m.patch.object(e.subprocess,'run',side_effect=run),m.patch.object(e.sys,'argv',['run-feeder.py']+(['--from-cache'] if cached else [])),contextlib.redirect_stdout(io.StringIO()) as stdout:
     code=e.main()

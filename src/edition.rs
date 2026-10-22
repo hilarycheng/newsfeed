@@ -1,13 +1,10 @@
-use crate::{common::*, cve, news, sources::App, steam};
+use crate::{common::*, cve, news, render, sources::App, steam};
 use chrono::{Duration, Utc};
 use serde_json::{Value, json};
 use std::{
     collections::HashSet,
     fs::{self, OpenOptions},
-    io::{Read, Seek, SeekFrom},
     path::Path,
-    process::{Command, Stdio},
-    time::Instant,
 };
 
 pub fn source_counts(statuses: &[Value]) -> Value {
@@ -22,37 +19,6 @@ pub fn require_health(statuses: &[Value]) -> Result<Value> {
         return Err("Too many source failures; previous edition preserved".into());
     }
     Ok(counts)
-}
-
-fn node(app: &App, args: &[&str], seconds: u64, log: &mut Vec<String>) -> Result<()> {
-    let mut output = tempfile::tempfile()?;
-    let mut child = Command::new("node")
-        .args(args)
-        .current_dir(&app.root)
-        .stdin(Stdio::null())
-        .stdout(output.try_clone()?)
-        .stderr(output.try_clone()?)
-        .spawn()?;
-    let start = Instant::now();
-    let status = loop {
-        if let Some(status) = child.try_wait()? {
-            break status;
-        }
-        if start.elapsed().as_secs() >= seconds {
-            child.kill()?;
-            child.wait()?;
-            return Err("Node build/check timed out".into());
-        }
-        std::thread::sleep(std::time::Duration::from_millis(25));
-    };
-    output.seek(SeekFrom::Start(0))?;
-    let mut text = String::new();
-    output.read_to_string(&mut text)?;
-    log.push(text);
-    if !status.success() {
-        return Err("Node build/check failed; see .sites-runtime/feeder.log".into());
-    }
-    Ok(())
 }
 
 fn private_file(path: &Path) -> Result<bool> {
@@ -126,6 +92,14 @@ fn validate(app: &App, feed: &Value, now: Time) -> Result<()> {
 }
 
 pub fn run(app: &App, cached: bool) -> Result<Value> {
+    run_with(app, cached, render::build)
+}
+
+fn run_with(
+    app: &App,
+    cached: bool,
+    build: impl FnOnce(&Path, &Value) -> Result<()>,
+) -> Result<Value> {
     let runtime = app.root.join(".sites-runtime");
     fs::create_dir_all(&runtime)?;
     let lock = OpenOptions::new()
@@ -163,7 +137,10 @@ pub fn run(app: &App, cached: bool) -> Result<Value> {
         if !cached {
             let now = Utc::now();
             news::fetch(app, now)?;
+            progress(format_args!("Steam：開始核對價格。"));
             steam::fetch(app, now, rows(&old_feed["stories"]))?;
+        } else {
+            progress(format_args!("Cache：讀取已完成嘅 RSS／Steam intake。"));
         }
         let now = Utc::now();
         let raw = read_json(&runtime.join("candidates.json"))?;
@@ -191,6 +168,7 @@ pub fn run(app: &App, cached: bool) -> Result<Value> {
             .map(|row| s(row, "name").to_string())
             .collect();
         stage = "rss_health";
+        progress(format_args!("RSS：檢查來源狀態。"));
         health = require_health(&statuses)?;
         for source in &mut statuses {
             if source["name"] == "iThome"
@@ -205,6 +183,7 @@ pub fn run(app: &App, cached: bool) -> Result<Value> {
             }
         }
         stage = "normalize";
+        progress(format_args!("篩選：整理及去重新聞。"));
         let mut cards = Vec::new();
         let (mut seen, mut titles) = (HashSet::new(), HashSet::new());
         for candidate in rows(&raw["candidates"])
@@ -247,11 +226,13 @@ pub fn run(app: &App, cached: bool) -> Result<Value> {
             }
         }
         stage = "cve";
+        progress(format_args!("CVE：核對來源狀態及整理資料。"));
         let (selected, counts, cve_status) = cve::select(app, cards, now, cached)?;
         let mut cards = selected;
         cve_counts = counts;
         statuses.push(cve_status);
         stage = "steam";
+        progress(format_args!("Steam：整理優惠。"));
         let deals = read_json(&runtime.join("steam-deal-candidates.json"))?;
         if !deals.is_array() || rows(&deals).is_empty() {
             return Err("Missing Steam intake observations".into());
@@ -273,6 +254,10 @@ pub fn run(app: &App, cached: bool) -> Result<Value> {
             app.policy["windowHours"].as_i64().unwrap_or(72),
         ));
         stage = "card_health";
+        progress(format_args!(
+            "篩選：{} 則新聞及優惠，檢查數量及排序。",
+            cards.len()
+        ));
         if cards.len() < 30 {
             return Err("Fewer than 30 eligible stories; previous edition preserved".into());
         }
@@ -293,6 +278,8 @@ pub fn run(app: &App, cached: bool) -> Result<Value> {
             "intake":{"cached":cached,"rssFetchedAt":raw["fetchedAt"],"steamFetchedAt":steam_at,"partial":partial},
             "note":format!("{cache_note}自動 RSS 整理：標題與短摘錄取自來源，未經 AI 改寫。規則篩選可能有遺漏；討論時間不代表原文日期。"),"editorialStats":{"medium":0,"total":cards.len(),"modelCalls":0}});
         stage = "build";
+        progress(format_args!("Build：生成靜態網站。"));
+        let published = render::prepare(&feed, now)?;
         write_json(&target, &feed)?;
         wrote_feed = true;
         if app.root.join("dist").exists() {
@@ -300,17 +287,17 @@ pub fn run(app: &App, cached: bool) -> Result<Value> {
             had_dist = true;
         }
         built = true;
-        node(app, &["scripts/build-static.mjs"], 90, &mut log)?;
-        node(app, &["--check", "dist/reader.js"], 20, &mut log)?;
+        build(&app.root, &published)?;
         stage = "validation";
-        let published = read_json(&app.root.join("dist/feed.json"))?;
+        progress(format_args!("驗證：檢查 feed 及輸出檔案。"));
+
         validate(app, &published, now)?;
         let good = statuses.iter().filter(|s| s["status"] == "ok").count();
         Ok(
             json!({"status":"success","rssHealth":health,"partial":partial,"cached":cached,"rssFetchedAt":raw["fetchedAt"],"itemCount":rows(&published["stories"]).len(),
             "sourceCount":statuses.len(),"failureCount":statuses.len()-good,"failedSources":statuses.iter().filter(|row| ["failed","skipped"].contains(&s(row,"status"))).take(8).map(|s| s["name"].clone()).collect::<Vec<_>>(),
             "limitedSourceCount":statuses.iter().filter(|s| s["status"] == "limited").count(),"dealCount":cards.iter().filter(|c| c["kind"] == "deal").count(),
-            "cveCount":cards.iter().filter(|c| !rows(&c["cveIds"]).is_empty()).count(),"cveJSON":cve_counts,"modelCalls":0,"artifact":"dist/index.html","sha256":hash(&fs::read(app.root.join("dist/feed.json"))?)}),
+            "cveCount":cards.iter().filter(|c| !rows(&c["cveIds"]).is_empty()).count(),"cveJSON":cve_counts,"modelCalls":0,"artifact":"dist/index.html","sha256":hash(&fs::read(app.root.join("dist/index.html"))?)}),
         )
     })();
     let result = match result {
@@ -363,14 +350,7 @@ mod tests {
         let temp = tempfile::tempdir().unwrap();
         let root = temp.path();
         let source = Path::new(env!("CARGO_MANIFEST_DIR"));
-        for dir in [
-            "config",
-            "scripts",
-            "app",
-            "public",
-            "data",
-            ".sites-runtime",
-        ] {
+        for dir in ["config", "data", ".sites-runtime"] {
             fs::create_dir(root.join(dir)).unwrap();
         }
         for name in [
@@ -387,20 +367,7 @@ mod tests {
             )
             .unwrap();
         }
-        for name in [
-            "scripts/build-static.mjs",
-            "app/globals.css",
-            "public/favicon.svg",
-        ] {
-            fs::copy(source.join(name), root.join(name)).unwrap();
-        }
         let now = Utc::now();
-        fs::create_dir(root.join("public/licenses")).unwrap();
-        fs::copy(
-            source.join("public/licenses/Apache-2.0.txt"),
-            root.join("public/licenses/Apache-2.0.txt"),
-        )
-        .unwrap();
         let mut candidates: Vec<_> = (0..30).map(|i| json!({"source":"Inside Java","title":format!("Java fixture {i}"),"feedExcerpt":"Synthetic fixture only.","url":format!("https://example.com/{i}"),"publishedAt":stamp(now)})).collect();
         candidates[0]["source"] = json!("Elixir 官方部落格");
         candidates[0]["title"] = json!("Elixir fixture");
@@ -422,11 +389,19 @@ mod tests {
         assert_eq!(result["status"], "success", "{result}");
         assert_eq!(result["itemCount"], 30);
         assert!(root.join("dist/index.html").exists());
-        assert!(root.join("dist/licenses/Apache-2.0.txt").exists());
+        assert_eq!(fs::read_dir(root.join("dist")).unwrap().count(), 1);
+        assert!(
+            fs::read_to_string(root.join("dist/index.html"))
+                .unwrap()
+                .contains("Apache-2.0 授權全文")
+        );
         let old_feed = fs::read(root.join("data/feed.json")).unwrap();
         let old_html = fs::read(root.join("dist/index.html")).unwrap();
-        fs::remove_file(root.join("app/globals.css")).unwrap();
-        let failed = run(&app, true).unwrap();
+        let failed = run_with(&app, true, |root, _| {
+            write_bytes(&root.join("dist/index.html"), b"partial build")?;
+            Err("Simulated output failure".into())
+        })
+        .unwrap();
         assert_eq!(failed["status"], "failure");
         assert_eq!(failed["stage"], "build");
         assert_eq!(fs::read(root.join("data/feed.json")).unwrap(), old_feed);

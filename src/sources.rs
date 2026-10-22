@@ -112,6 +112,7 @@ impl App {
             watch,
             root,
             client: Client::builder()
+                .user_agent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36")
                 .redirect(Policy::none())
                 .timeout(Duration::from_secs(25))
                 .build()?,
@@ -258,7 +259,7 @@ impl App {
         }
         self.audit(adapter, identity, url, "authorized_initial_url", None)?;
         let result = (|| -> Result<Vec<u8>> {
-            let response = self.client.get(url).header("User-Agent","NewsFeed/1.0").header("Accept","application/rss+xml, application/atom+xml, application/xml, application/json, text/xml, */*")
+            let response = self.client.get(url).header("Accept","application/rss+xml, application/atom+xml, application/xml, application/json, text/xml, */*")
                 .timeout(Duration::from_secs(seconds)).send().map_err(|_| source_error("transport_error"))?;
             let status = response.status().as_u16();
             self.audit(adapter, identity, url, "response", Some(status))?;

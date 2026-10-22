@@ -2,4 +2,5 @@
 set -euo pipefail
 cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 cargo build --release --locked "$@"
-printf 'Built: %s/target/release/news-feeder\n' "$PWD"
+cp -- target/release/news-feeder ./news-feeder
+printf 'Built: %s/news-feeder\n' "$PWD"

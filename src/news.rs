@@ -8,7 +8,7 @@ use roxmltree::{Document, Node};
 use serde_json::{Value, json};
 use std::{
     collections::{BTreeSet, HashMap, HashSet},
-    sync::LazyLock,
+    sync::{LazyLock, Mutex},
 };
 
 const BLOCK_GAMES: &str = r"(?i)\b(FPS|first.person shooter|Counter.Strike|Call of Duty|Battlefield|Valorant|Fortnite|PUBG|Apex Legends|Overwatch|Destiny 2|esports?|League of Legends|Dota|multiplayer.only|MMORPG|PS[3456]|PlayStation|Xbox|Nintendo|Switch 2|console)\b|第一人稱射擊|\u{7535}\u{7ade}|電競|主機獨佔";
@@ -228,7 +228,25 @@ pub fn fetch(app: &App, now: Time) -> Result<()> {
         .filter(|s| s["enabled"] != false)
         .cloned()
         .collect();
-    let results = parallel(&sources, 12, |source| fetch_one(app, source, now));
+    progress(format_args!("RSS：開始讀取 {} 個來源。", sources.len()));
+    let completed = Mutex::new(0);
+    let results = parallel(&sources, 12, |source| {
+        let result = fetch_one(app, source, now);
+        let mut completed = completed.lock().unwrap();
+        *completed += 1;
+        let status = match s(&result["source"], "status") {
+            "ok" => "成功",
+            "skipped" => "略過",
+            _ => "失敗",
+        };
+        progress(format_args!(
+            "RSS [{}/{}] {}：{status}",
+            *completed,
+            sources.len(),
+            s(source, "name")
+        ));
+        result
+    });
     let mut seen = HashSet::new();
     let candidates: Vec<_> = results
         .iter()
