@@ -297,7 +297,7 @@ fn run_with(
             json!({"status":"success","rssHealth":health,"partial":partial,"cached":cached,"rssFetchedAt":raw["fetchedAt"],"itemCount":rows(&published["stories"]).len(),
             "sourceCount":statuses.len(),"failureCount":statuses.len()-good,"failedSources":statuses.iter().filter(|row| ["failed","skipped"].contains(&s(row,"status"))).take(8).map(|s| s["name"].clone()).collect::<Vec<_>>(),
             "limitedSourceCount":statuses.iter().filter(|s| s["status"] == "limited").count(),"dealCount":cards.iter().filter(|c| c["kind"] == "deal").count(),
-            "cveCount":cards.iter().filter(|c| !rows(&c["cveIds"]).is_empty()).count(),"cveJSON":cve_counts,"modelCalls":0,"artifact":"dist/index.html","sha256":hash(&fs::read(app.root.join("dist/index.html"))?)}),
+            "cveCount":cards.iter().filter(|c| !rows(&c["cveIds"]).is_empty()).count(),"cveJSON":cve_counts,"modelCalls":0,"artifact":"dist/index.html","sha256":hash(&fs::read(app.root.join("dist/index.html"))?),"artifacts":render::artifact_hashes(&app.root)?}),
         )
     })();
     let result = match result {
@@ -389,7 +389,7 @@ mod tests {
         assert_eq!(result["status"], "success", "{result}");
         assert_eq!(result["itemCount"], 30);
         assert!(root.join("dist/index.html").exists());
-        assert_eq!(fs::read_dir(root.join("dist")).unwrap().count(), 1);
+        assert_eq!(fs::read_dir(root.join("dist")).unwrap().count(), 6);
         assert!(
             fs::read_to_string(root.join("dist/index.html"))
                 .unwrap()

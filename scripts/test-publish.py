@@ -12,6 +12,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 REPO = 'git@hilary.git:hilarycheng/newsfeed.git'
+ASSETS = ['apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'index.html', 'manifest.webmanifest', 'sw.js']
 
 
 class PublishTests(unittest.TestCase):
@@ -52,8 +53,12 @@ exit "$(cat fixture-exit)"
     def edition(self, text):
         html = f'<!doctype html><title>{text}</title>'.encode()
         (self.root / 'dist/index.html').write_bytes(html)
+        for name in ASSETS:
+            if name != 'index.html':
+                (self.root / 'dist' / name).write_bytes(('fixture ' + name).encode())
         self.result = {'status': 'success', 'artifact': 'dist/index.html',
-                       'sha256': hashlib.sha256(html).hexdigest()}
+                       'sha256': hashlib.sha256(html).hexdigest(),
+                       'artifacts': {name: hashlib.sha256((self.root / 'dist' / name).read_bytes()).hexdigest() for name in ASSETS}}
         self.save_result()
 
     def save_result(self):
@@ -74,7 +79,7 @@ exit "$(cat fixture-exit)"
         self.assertEqual((self.root / '.sites-runtime/feeder-args').read_text(),
                          '--quiet\n--build-only\n')
         files = self.git('ls-tree', '--name-only', 'main', cwd=self.remote).stdout
-        self.assertEqual(files.splitlines(), ['.nojekyll', 'index.html'])
+        self.assertEqual(files.splitlines(), ['.nojekyll', *ASSETS])
         self.assertEqual(self.git('show', 'main:index.html', cwd=self.remote).stdout,
                          (self.root / 'dist/index.html').read_text())
         first = self.head()
@@ -101,7 +106,7 @@ exit "$(cat fixture-exit)"
                                         env=self.env, capture_output=True)
                 self.assertNotEqual(result.returncode, 0)
                 self.assertEqual(self.head(), first)
-        self.assertEqual(list((self.root / '.sites-runtime').glob('pages-index.*')), [])
+        self.assertEqual(list((self.root / '.sites-runtime').glob('pages-build.*')), [])
 
     def test_failed_push_is_retried_without_an_extra_commit(self):
         self.run_publish()
@@ -118,6 +123,22 @@ exit "$(cat fixture-exit)"
         hook.unlink()
         self.run_publish()
         self.assertEqual(self.head(), pending)
+
+    def test_missing_tampered_or_unexpected_pwa_assets_are_rejected(self):
+        self.run_publish()
+        first = self.head()
+        for mode in ['missing', 'tampered', 'extra']:
+            with self.subTest(mode=mode):
+                self.edition('not published')
+                if mode == 'missing':
+                    (self.root / 'dist/sw.js').unlink()
+                elif mode == 'tampered':
+                    (self.root / 'dist/icon-192.png').write_bytes(b'corrupt')
+                else:
+                    self.result['artifacts']['../private.json'] = '0' * 64
+                    self.save_result()
+                self.run_publish(code=1 if mode != 'extra' else 4)
+                self.assertEqual(self.head(), first)
 
     def test_overlapping_runs_and_unknown_arguments_do_not_start_the_feeder(self):
         with (self.root / '.sites-runtime/publish.lock').open('w') as lock:

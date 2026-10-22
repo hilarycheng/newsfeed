@@ -11,6 +11,19 @@ const TEMPLATE: &str = include_str!("../app/index.html");
 const CSS: &str = include_str!("../app/globals.css");
 const READER: &str = include_str!("../app/reader.js");
 const LICENSE: &str = include_str!("../public/licenses/Apache-2.0.txt");
+const WORKER: &str = include_str!("../app/sw.js");
+const PWA_ASSETS: &[(&str, &[u8])] = &[
+    (
+        "manifest.webmanifest",
+        include_bytes!("../public/manifest.webmanifest"),
+    ),
+    ("icon-192.png", include_bytes!("../public/icon-192.png")),
+    ("icon-512.png", include_bytes!("../public/icon-512.png")),
+    (
+        "apple-touch-icon.png",
+        include_bytes!("../public/apple-touch-icon.png"),
+    ),
+];
 
 fn escape(value: &str) -> String {
     html_escape::encode_double_quoted_attribute(value).into_owned()
@@ -261,7 +274,30 @@ pub fn html(feed: &Value) -> Result<String> {
 }
 
 pub fn build(root: &Path, feed: &Value) -> Result<()> {
-    write_bytes(&root.join("dist/index.html"), html(feed)?.as_bytes())
+    let html = html(feed)?;
+    write_bytes(&root.join("dist/index.html"), html.as_bytes())?;
+    let mut version = html.into_bytes();
+    version.extend_from_slice(WORKER.as_bytes());
+    for (name, bytes) in PWA_ASSETS {
+        write_bytes(&root.join("dist").join(name), bytes)?;
+        version.extend_from_slice(bytes);
+    }
+    let worker = WORKER.replace("__CACHE_VERSION__", &hash(&version));
+    write_bytes(&root.join("dist/sw.js"), worker.as_bytes())
+}
+
+pub fn artifact_hashes(root: &Path) -> Result<Value> {
+    let mut hashes = serde_json::Map::new();
+    for name in ["index.html", "sw.js"]
+        .into_iter()
+        .chain(PWA_ASSETS.iter().map(|(name, _)| *name))
+    {
+        hashes.insert(
+            name.into(),
+            json!(hash(&fs::read(root.join("dist").join(name))?)),
+        );
+    }
+    Ok(Value::Object(hashes))
 }
 
 // Replaces the old standalone static builder without fetching or changing intake/state.
@@ -277,9 +313,9 @@ pub fn rebuild(root: &Path) -> Result<Value> {
     let mut preserved = true;
     let result = (|| -> Result<Value> {
         let feed = prepare(&read_json(&root.join("data/feed.json"))?, Utc::now())?;
-        let html = html(&feed)?;
         let staging = tempfile::tempdir_in(root)?;
-        write_bytes(&staging.path().join("dist/index.html"), html.as_bytes())?;
+        build(staging.path(), &feed)?;
+        let artifacts = artifact_hashes(staging.path())?;
         let dist = root.join("dist");
         let old = staging.path().join("old");
         if dist.exists() {
@@ -299,7 +335,7 @@ pub fn rebuild(root: &Path) -> Result<Value> {
         }
         Ok(
             json!({"status":"success", "buildOnly":true, "itemCount":rows(&feed["stories"]).len(),
-        "artifact":"dist/index.html", "sha256":hash(html.as_bytes()), "modelCalls":0}),
+        "artifact":"dist/index.html", "sha256":artifacts["index.html"], "artifacts":artifacts, "modelCalls":0}),
         )
     })()
     .unwrap_or_else(|error| {

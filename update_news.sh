@@ -19,16 +19,22 @@ export GIT_TERMINAL_PROMPT=0
 export GIT_SSH_COMMAND='ssh -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15'
 
 ./news-feeder --quiet "$@"
-checksum=$(jq -er '
+files=(index.html sw.js manifest.webmanifest icon-192.png icon-512.png apple-touch-icon.png)
+checksums=$(jq -er '
   select(.status == "success" and .artifact == "dist/index.html")
-  | .sha256 | select(type == "string" and test("^[0-9a-f]{64}$"))
+  | select(.artifacts | keys == ["apple-touch-icon.png", "icon-192.png", "icon-512.png", "index.html", "manifest.webmanifest", "sw.js"])
+  | select(.sha256 == .artifacts["index.html"])
+  | select(.artifacts | all(.[]; type == "string" and test("^[0-9a-f]{64}$")))
+  | .artifacts | to_entries[] | "\(.value)  \(.key)"
 ' .sites-runtime/feeder-result.json)
 
 # Verify the copied bytes so a concurrent manual rebuild cannot change the upload.
-snapshot=$(mktemp .sites-runtime/pages-index.XXXXXX)
-trap 'rm -f -- "$snapshot"' EXIT
-cp -- dist/index.html "$snapshot"
-printf '%s  %s\n' "$checksum" "$snapshot" | sha256sum --check --status
+snapshot=$(mktemp -d .sites-runtime/pages-build.XXXXXX)
+trap 'rm -rf -- "$snapshot"' EXIT
+for file in "${files[@]}"; do
+  cp -- "dist/$file" "$snapshot/$file"
+done
+(cd -- "$snapshot"; printf '%s\n' "$checksums" | sha256sum --check --status)
 
 repo_url=git@hilary.git:hilarycheng/newsfeed.git
 publish_dir="$PWD/.sites-runtime/pages"
@@ -46,11 +52,15 @@ git -C "$publish_dir" fetch --quiet origin
 if git -C "$publish_dir" show-ref --verify --quiet refs/remotes/origin/main; then
   git -C "$publish_dir" merge --quiet --ff-only refs/remotes/origin/main
 fi
-[[ -z "$(git -C "$publish_dir" ls-files -- ':!:index.html' ':!:.nojekyll')" ]]
+excluded=(':!:.nojekyll')
+for file in "${files[@]}"; do excluded+=(":!:$file"); done
+[[ -z "$(git -C "$publish_dir" ls-files -- "${excluded[@]}")" ]]
 
-cp -- "$snapshot" "$publish_dir/index.html"
+for file in "${files[@]}"; do
+  cp -- "$snapshot/$file" "$publish_dir/$file"
+done
 : > "$publish_dir/.nojekyll"
-git -C "$publish_dir" add -- index.html .nojekyll
+git -C "$publish_dir" add -- "${files[@]}" .nojekyll
 if ! git -C "$publish_dir" diff --cached --quiet; then
   git -C "$publish_dir" \
     -c user.name=hilarycheng \

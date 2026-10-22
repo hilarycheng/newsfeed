@@ -18,3 +18,5 @@ header,footer{flex-wrap:wrap}h2{overflow-wrap:anywhere}.category-art span{max-wi
 .cve-metrics,.cve-related ul{padding-left:20px}.cve-metrics li,.cve-related li{margin:6px 0}.cve-related{margin:0 0 16px}.cve-related summary{cursor:pointer}.cvss-vector{font-family:ui-monospace,monospace;font-size:.8rem}
 
 [hidden]{display:none!important}.category-art svg{width:60px;height:60px}.license-text{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.75rem}.source-status:target{outline:3px solid #598afb}
+
+#install-app{font:inherit;font-size:.875rem;min-height:44px;padding:10px 16px;border:1px solid var(--border);border-radius:999px;background:var(--card);color:var(--foreground);cursor:pointer}

@@ -220,4 +220,28 @@ function startReader() {
 }
 
 startReader();
+if (window.isSecureContext && /^https?:$/.test(location.protocol) && 'serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js', { scope: './', updateViaCache: 'none' })
+    .catch(() => console.warn('離線功能暫時未能啟用。'));
+}
+const offline = document.getElementById('offline-status');
+const connection = () => { offline.hidden = navigator.onLine; };
+window.addEventListener('online', connection);
+window.addEventListener('offline', connection);
+connection();
+const install = document.getElementById('install-app');
+let installPrompt;
+window.addEventListener('beforeinstallprompt', event => {
+  event.preventDefault();
+  installPrompt = event;
+  install.hidden = false;
+});
+install.addEventListener('click', async () => {
+  if (!installPrompt) return;
+  install.hidden = true;
+  const prompt = installPrompt;
+  installPrompt = null;
+  try { await prompt.prompt(); } catch { /* Browser installation remains optional. */ }
+});
+window.addEventListener('appinstalled', () => { install.hidden = true; installPrompt = null; });
 })();

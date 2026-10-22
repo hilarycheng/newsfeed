@@ -124,9 +124,10 @@ fn rebuild_preserves_snapshot_and_old_output_on_invalid_input() {
     write_bytes(&root.join("dist/old.css"), b"old").unwrap();
     let result = rebuild(root).unwrap();
     assert_eq!(fs::read(root.join("data/feed.json")).unwrap(), source);
-    assert_eq!(fs::read_dir(root.join("dist")).unwrap().count(), 1);
+    assert_eq!(fs::read_dir(root.join("dist")).unwrap().count(), 6);
     let output = fs::read(root.join("dist/index.html")).unwrap();
     assert_eq!(result["sha256"], hash(&output));
+    assert_eq!(result["artifacts"], artifact_hashes(root).unwrap());
     write_bytes(&root.join("data/feed.json"), b"broken json").unwrap();
     assert_eq!(rebuild(root).unwrap()["status"], "failure");
     assert_eq!(
@@ -134,6 +135,43 @@ fn rebuild_preserves_snapshot_and_old_output_on_invalid_input() {
         "failure"
     );
     assert_eq!(fs::read(root.join("dist/index.html")).unwrap(), output);
+}
+
+#[test]
+fn pwa_assets_are_portable_small_and_versioned() {
+    let temp = tempfile::tempdir().unwrap();
+    let root = temp.path();
+    let mut feed = fixture();
+    build(root, &feed).unwrap();
+    let manifest = read_json(&root.join("dist/manifest.webmanifest")).unwrap();
+    for key in ["id", "scope", "start_url"] {
+        assert_eq!(manifest[key], "./");
+    }
+    assert_eq!(manifest["display"], "standalone");
+    for (name, size) in [
+        ("icon-192.png", 192_u32),
+        ("icon-512.png", 512),
+        ("apple-touch-icon.png", 180),
+    ] {
+        let png = fs::read(root.join("dist").join(name)).unwrap();
+        assert_eq!(&png[..8], b"\x89PNG\r\n\x1a\n");
+        assert_eq!(&png[16..20], size.to_be_bytes());
+        assert_eq!(&png[20..24], size.to_be_bytes());
+    }
+    let overhead: u64 = fs::read_dir(root.join("dist"))
+        .unwrap()
+        .map(|e| e.unwrap())
+        .filter(|e| e.file_name() != "index.html")
+        .map(|e| e.metadata().unwrap().len())
+        .sum();
+    assert!(overhead < 20_000, "PWA assets grew to {overhead} bytes");
+    let old = fs::read_to_string(root.join("dist/sw.js")).unwrap();
+    assert!(!old.contains("__CACHE_VERSION__"));
+    build(root, &feed).unwrap();
+    assert_eq!(fs::read_to_string(root.join("dist/sw.js")).unwrap(), old);
+    feed["note"] = json!("新版離線內容");
+    build(root, &feed).unwrap();
+    assert_ne!(fs::read_to_string(root.join("dist/sw.js")).unwrap(), old);
 }
 
 #[test]

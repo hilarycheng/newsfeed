@@ -1,6 +1,6 @@
 # News Feed — Rust feeder
 
-Rust feeder 喺屋企執行，生成單一 `dist/index.html`。
+Rust feeder 喺屋企執行，生成內嵌 UI 同資料嘅 `dist/index.html`，以及少量 PWA 安裝／離線資源。
 RSS、Steam、CVE 同 HTML 生成都由 Rust 處理，唔需要 Node.js、Python 或 LLM。
 CSS、瀏覽器 JavaScript、新聞資料、favicon 同需要嘅授權文字全部內嵌。圖片同 logo 沿用外部 HTTPS 網址。
 Rust HTTP 請求共用 Chrome 155／Linux 桌面格式嘅 User-Agent。
@@ -15,7 +15,7 @@ Rust HTTP 請求共用 Chrome 155／Linux 桌面格式嘅 User-Agent。
 
 `build.sh` 編譯成功後會將執行檔複製到專案根目錄 `news-feeder`。執行唔需要 Rust toolchain。
 Build 過程唔會讀新聞或啟動排程。
-`app/index.html`、`app/reader.js`、`app/globals.css` 喺編譯時嵌入執行檔；修改 UI 後需要重新編譯。
+`app/index.html`、`app/reader.js`、`app/globals.css`、`app/sw.js` 同 PWA manifest／icons 喺編譯時嵌入執行檔；修改後需要重新編譯。
 不同 OS／CPU 需要各自編譯。
 
 ## 執行
@@ -78,7 +78,7 @@ Quiet mode 保留 exit code、結果檔案（一般更新亦保留日誌）。�
 1. 屋企執行 feeder。
 2. dot 確認 `feeder-result.json` 嘅 `status` 為 `success`。
 3. dot 核對結果內嘅 `sha256` 與 `dist/index.html`。
-4. dot 只複製 `dist/index.html` 到目的地。
+4. 如只需普通閱讀頁，可單獨複製 `dist/index.html`；PWA 則核對結果內 `artifacts` 各檔 SHA-256，再一併複製下方六個檔案。
 
 Cloud computer 接收已生成嘅靜態檔案，唔需要重跑 feeder 或 build。
 HTML 可以直接開檔，亦可以放喺 GitHub Pages 嘅發布目錄。
@@ -88,7 +88,7 @@ SSH 憑證同 cron 排程留喺屋企，唔放入 repo。
 
 ## 屋企 cron → GitHub Pages
 
-`update_news.sh` 更新新聞後，會將單一 HTML 發布到公開 repo：
+`update_news.sh` 更新新聞後，會將 HTML 同 PWA 資源發布到公開 repo：
 [hilarycheng/newsfeed](https://github.com/hilarycheng/newsfeed)。
 發布網址：[hilarycheng.github.io/newsfeed](https://hilarycheng.github.io/newsfeed/)。
 需要先完成下方 Pages 設定，網址先會生效。
@@ -144,15 +144,43 @@ Feeder 本身仍然只需要 Rust 執行檔，唔需要 Node.js 或 Python。
 ### 發布與失敗處理
 
 - `flock` 鎖住整個更新、commit、push 流程；重疊執行會直接以 exit code `75` 結束。
-- Feeder 必須成功，結果必須係 `success`，複製出嚟嘅 HTML 必須符合結果內嘅 SHA-256。
-- 只 stage `index.html` 同空白 `.nojekyll`。CSS、JS 同資料內嵌喺 HTML；圖片仍用外部網址。
-- HTML 冇變就唔建立新 commit；每次仍會 push，重試上次未送出嘅 commit。
+- Feeder 必須成功，結果必須係 `success`，複製出嚟嘅六個檔案必須符合 `artifacts` 內嘅 SHA-256；缺檔或額外檔名會停止發布。
+- 只 stage 六個指定發布檔案同空白 `.nojekyll`。CSS、UI JavaScript 同資料仍內嵌喺 HTML；圖片仍用外部網址。
+- 發布檔案冇變就唔建立新 commit；每次仍會 push，重試上次未送出嘅 commit。
 - Push 失敗會返回非零 exit code，GitHub 保留上一版；本機 commit 留待下次重試。
 - 遠端更新只接受 fast-forward。分支分歧時停止，唔會 force push 或刪除歷史；需先人工處理 clone 嘅分支。
 - 發現 clone 有額外 tracked file 會停止，避免將本機資料加入網站。
 
 先查 `.sites-runtime/publish.log`，再查 `.sites-runtime/feeder-result.json` 同 `feeder.log`。
 HTML 同佢內嵌嘅閱讀資料會公開；原始 `data/`、config、憑證、Rust source 同執行檔唔會上傳。
+
+## PWA 同 app icon
+
+發布內容固定為六個檔案，唔需要 Node.js 或外部 CSS／UI JavaScript：
+
+| 檔案 | 用途 |
+| --- | --- |
+| `index.html` | UI、CSS、reader JavaScript、資料同 favicon |
+| `sw.js` | Service worker，提供離線閱讀同快取更新 |
+| `manifest.webmanifest` | App 名稱、圖示、安裝模式同範圍 |
+| `icon-192.png`、`icon-512.png` | Android／桌面 app icon，支援 maskable 裁切 |
+| `apple-touch-icon.png` | iPhone／iPad 180×180 icon |
+
+Icon 沿用藍色新聞紙標誌；可編輯原稿係 `public/app-icon.svg`。
+PNG 已預先產生並嵌入 Rust 執行檔，正常 build 同 cron 唔需要圖像工具。
+Manifest 同 service worker 使用相對路徑，範圍限於 `/newsfeed/`，唔會影響同帳戶嘅其他 Pages。
+
+- Android／桌面支援安裝嘅瀏覽器，可用網站嘅「安裝 App」按鈕或瀏覽器安裝選單。
+- iPhone／iPad 用 Safari 開啟網站，從分享選單選「加入主畫面」。
+- 安裝選項由瀏覽器決定；已安裝或唔支援安裝提示時，網站唔顯示安裝按鈕。
+- 首次需要連線，成功儲存資源後先可以離線閱讀、分類同載入更多。
+- 每次開啟／重新整理先讀網絡；連線失敗、HTTP 錯誤或等候超過五秒時，使用已儲存內容。
+- 內容或 app 資源改變會產生新快取版本；新版本完整儲存後先接管，並清理本 app 舊快取。
+- 已開啟嘅頁面唔會強制重新整理；重新開啟或手動重新整理可讀新一期。
+- 外部新聞圖片、logo 同原文唔加入 app 快取。瀏覽器清除網站資料後需要重新連線。
+- 直接用 `file://` 開 HTML 仍可閱讀；安裝同 service worker 需要 HTTPS 或 localhost。
+
+參考：[MDN 安裝條件](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable)、[service worker](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers)。
 
 ## 本機資料
 
@@ -171,7 +199,7 @@ cargo test --locked
 ```
 
 Rust tests 使用合成 RSS／Atom、Steam fixture、CVE record 同暫存目錄。
-包括 cache → feed → 單一 HTML、空白 PATH 執行、資料 escaping、體積上限，以及 build 失敗後保留上一期嘅測試。
+包括 cache → feed → HTML／PWA 資源、空白 PATH 執行、資料 escaping、體積上限，以及 build 失敗後保留上一期嘅測試。
 Tests 唔會讀取真實來源。`--from-cache` 需要有效 intake，唔係測試指令。
 
 發布流程嘅離線測試使用假 feeder 同真實本機 Git bare repo，唔連線 GitHub：
@@ -180,13 +208,16 @@ Tests 唔會讀取真實來源。`--from-cache` 需要有效 intake，唔係測�
 python3 scripts/test-publish.py
 ```
 
-涵蓋檔案白名單、無變更、失敗結果、checksum、重疊執行同 push 重試。Python 只用於呢個開發測試。
+涵蓋檔案白名單、PWA 缺檔／損壞、無變更、失敗結果、checksum、重疊執行同 push 重試。Python 只用於開發測試。
 
 安裝 Chrome／Chromium 後，可執行真實瀏覽器 fixture 測試：
 
 ```sh
 cargo test --locked browser_reader -- --ignored
+python3 scripts/test-pwa.py
 ```
+
+PWA 測試使用 `cargo test` 產生嘅 debug binary、localhost 同兩期合成資料；真實驗證 service worker 離線導航、HTTP 錯誤／下載中斷回退、版本更新、圖示尺寸、安裝按鈕同快取範圍。唔會連線真實來源。
 
 預設使用 `google-chrome`；其他路徑可透過 `CHROME_BIN` 指定。測試封鎖外部 hostname，核對分類、分頁、無限捲動、手機／桌面欄數、圖片失敗、授權及惡意內容 escaping，唔需要 Node.js 或 Playwright。
 

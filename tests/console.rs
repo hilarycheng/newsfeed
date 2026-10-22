@@ -89,7 +89,7 @@ fn console_modes_preserve_results_and_exit_codes() {
     assert!(build.stdout.is_empty() && build.stderr.is_empty());
     assert_eq!(fs::read(root.join("data/feed.json")).unwrap(), snapshot);
     let previous = fs::read(root.join("dist/index.html")).unwrap();
-    assert_eq!(fs::read_dir(root.join("dist")).unwrap().count(), 1);
+    assert_eq!(fs::read_dir(root.join("dist")).unwrap().count(), 6);
     let result: Value =
         serde_json::from_slice(&fs::read(root.join(".sites-runtime/feeder-result.json")).unwrap())
             .unwrap();
