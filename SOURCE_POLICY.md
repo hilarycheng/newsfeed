@@ -1,5 +1,25 @@
 # News Feed
 
+## 2026-10-26 user-requested RSS hold release
+
+The user instructed that all registered RSS feeds and official CVE intake return to normal fetching. The seven existing Node.js, OpenAI, Deno, Bun, Tokio, Rust Foundation and Hugging Face holds and the CVE hold were removed from `config/source-holds.json`. No fetch was run; the user will handle it. This supersedes older hold-state notes below. It does not expand the fixed RSS inventory, permit redirects or override platform review. If any new request is denied, stop and follow the persistent failed-source procedure below.
+
+## 2026-10-26 newsletter feeds
+
+Programming Digest, Frontend Focus, Web Tools Weekly, React Status, JVM Weekly, and the existing JavaScriptWeekly RSS feed are newsletter issues: keep one RSS item as one card under `Newsletter` and retain dated issues for 14 days. The newsletter category is separately filterable. Ordinary news remains 72 hours; Steam and CVE keep their existing rules. Programming Digest's cached latest item is dated 2026-10-18 while its archive/canonical issue was current through 2026-10-25; only the item date may set `publishedAt`.
+
+Java Performance Tuning remains a disabled `needs_date_mapping` candidate because entries lack `pubDate`. The official This Week in Spring issue is recorded as a candidate URL, not an RSS source; the existing Spring blog feed keeps its general-blog role. Baeldung Weekly and JetBrains JAM remain unresolved candidates without feed URLs. Missing publication dates are dropped, never replaced with fetch time. Do not add stale CSS or TypeScript newsletter candidates.
+
+## 2026-10-25 requested Taiwan technology feeds
+
+The user approved verification and addition of TechNice, XFastest and EE Times Taiwan. XFastest's homepage advertises `https://news.xfastest.com/feed/`; a direct no-redirect request returned dated RSS and it is enabled. Existing short publisher excerpts, source links and attribution apply; this is not a claim of a full-article republication license. The enabled exact URLs below extend the previously approved network inventory; all existing URL/hostname/CVE holds remain unchanged.
+
+TechNice's homepage advertises `https://www.technice.com.tw/feed/`, which returned dated RSS. Its official terms (`https://www.technice.com.tw/terms-of-service/`, section 10) were reviewed. The user subsequently explicitly confirmed private RSS reference use and required enabling it. It is enabled for the requested RSS reader, preserving the existing short feed excerpts and source links; do not claim a general republication license or publish externally as part of this change. EE Times Taiwan is registered but disabled: its homepage and candidate `https://www.eettaiwan.com/feed/` returned HTTP 403. Its RSS identity, dates and reuse terms are unverified. Do not describe EE Times Taiwan as active or use an alternate route to bypass access restrictions.
+
+These three entries use `user_tech_interests`: Java, Kotlin, Rust, Elixir, Erlang, Node.js, JavaScript, TypeScript, AI and semiconductors. Semiconductor news stays in the existing 科技 category. Ordinary local news, recruitment and obvious promotions are excluded. Existing known non-FPS PC game titles remain eligible; new RPG/Roguelike/Roguelite titles need explicit PC/Steam and single-player evidence. FPS, console-only and multiplayer-only exclusions remain. This source-specific selection does not widen other feeds' editorial rules. Unknown game titles/platforms may be omitted; no model classification or translation is added.
+
+CVE was inspected, not enabled as of 2026-10-25: the current edition reported `skipped`, and no local `data/cve-json-state.json` was present. The historical pending-work explanation could not be verified from local state. The user removed the CVE hold on 2026-10-26; no CVE fetch was run here.
+
 A public, static, read-only mobile news reader. The deployed bundle has no server-side Worker, database binding, web updater, intake endpoint, administrative route, or custom update key. Content is generated locally by the Rust feeder and published as a self-contained HTML reader with small PWA installation/offline assets. No source intake runs in the hosted page.
 
 ## Compact deterministic refresh

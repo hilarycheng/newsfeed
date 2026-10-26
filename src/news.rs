@@ -13,6 +13,10 @@ use std::{
 
 const BLOCK_GAMES: &str = r"(?i)\b(FPS|first.person shooter|Counter.Strike|Call of Duty|Battlefield|Valorant|Fortnite|PUBG|Apex Legends|Overwatch|Destiny 2|esports?|League of Legends|Dota|multiplayer.only|MMORPG|PS[3456]|PlayStation|Xbox|Nintendo|Switch 2|console)\b|第一人稱射擊|\u{7535}\u{7ade}|電競|主機獨佔";
 const GAME_NAMES: &str = r"(?i)\b(Hades|Slay the Spire|Silksong|Stardew Valley|Baldur.?s Gate|Factorio|RimWorld|Terraria|Noita|Balatro|Dead Cells|Celeste|Hollow Knight|Civilization|Crusader Kings|Dwarf Fortress|Satisfactory|Against the Storm|Manor Lords|Persona|Obra Dinn|CloverPit)\b";
+const USER_TECH: &str = r"(?i)(?-u:\b)(java|kotlin|jvm|rust|node\.?js|javascript|typescript|elixir|erlang|AI|LLM|OpenAI|chatgpt|claude|gemini|ollama|agentic|machine learning)(?-u:\b)|人工智能|人工智慧|機器學習|大語言模型|大型語言模型";
+const SEMICONDUCTOR: &str = r"(?i)(?-u:\b)(semiconductors?|chips?|chiplets?|CPU|GPU|NPU|DRAM|HBM|TSMC|Intel|AMD|NVIDIA|Ryzen|GeForce|Radeon|RISC-V)(?-u:\b)|半導體|晶片|晶圓|處理器|台積電|輝達|先進封裝|矽光子";
+const RPG_ROGUELIKE: &str =
+    r"(?i)(?-u:\b)([AJC]?RPG|rogue.?like|rogue.?lite)(?-u:\b)|角色扮演|肉鴿";
 pub const MAJOR: &str = r"(?i)critical|actively exploit|exploited in the wild|remote code execution|重大|嚴重|積極利用|已遭利用";
 pub const EXCLUDED: &str = r"(?i)\b(windows|microsoft|exchange|sharepoint|azure|office)\b";
 pub const OTHER_LANGUAGE: &str =
@@ -151,11 +155,12 @@ pub fn parse_feed(
         let Some(d) = d else {
             continue;
         };
-        if title.is_empty()
-            || !url.starts_with("https://")
-            || d > now
-            || d < now - Duration::hours(72)
-        {
+        let window = Duration::hours(if source["newsletter"] == true {
+            NEWSLETTER_WINDOW_HOURS
+        } else {
+            72
+        });
+        if title.is_empty() || !url.starts_with("https://") || d > now || d < now - window {
             continue;
         }
         let mut description = text(child(n, &["description", "summary", "encoded", "content"]));
@@ -295,7 +300,13 @@ pub fn normalize(app: &App, a: &Value, now: Time) -> Option<Value> {
     {
         return None;
     }
-    if !current(s(a, "publishedAt"), now) {
+    let newsletter = source["newsletter"] == true;
+    let category = if newsletter {
+        "Newsletter"
+    } else {
+        source["category"].as_str().unwrap_or("科技")
+    };
+    if !current_for_category(s(a, "publishedAt"), category, now) {
         return None;
     }
     let preserve = source["preservePublisherText"] == true;
@@ -310,19 +321,50 @@ pub fn normalize(app: &App, a: &Value, now: Time) -> Option<Value> {
     if title.is_empty() || matches(OTHER_LANGUAGE, &text) {
         return None;
     }
-    let mut category = source["category"]
-        .as_str()
-        .or(a["category"].as_str())
-        .unwrap_or("科技");
+    let mut category = if newsletter {
+        "Newsletter"
+    } else {
+        source["category"]
+            .as_str()
+            .or(a["category"].as_str())
+            .unwrap_or("科技")
+    };
+    let focused = source["filter"] == "user_tech_interests";
+    let allowed_game = matches(GAME_NAMES, &title)
+        || focused
+            && (matches("哈帝斯|黑帝斯|殺戮尖塔|柏德之門|小丑牌", &title)
+                || matches(RPG_ROGUELIKE, &title)
+                    && matches(r"(?i)(?-u:\b)(PC|Steam)(?-u:\b)", &text)
+                    && matches(r"(?i)single.player|單人|單機", &text)
+                    && !matches(
+                        r"(?i)(不支援|沒有|未說明|未確認|非)(單人|單機)|僅限多人|多人限定|no single.player",
+                        &text,
+                    ));
+    if focused
+        && (matches("徵才|招募|抽獎|折價|折扣碼|購物優惠", &title)
+            || matches(
+                r"(?i)(?-u:\b)FPS(?-u:\b)|決勝時刻|戰地風雲|特戰英豪|鬥陣特攻|絕地求生|第一人稱射擊",
+                &text,
+            )
+            || !matches(SEMICONDUCTOR, &title) && matches(BLOCK_GAMES, &title)
+            || !(matches(USER_TECH, &text) || matches(SEMICONDUCTOR, &text) || allowed_game))
+    {
+        return None;
+    }
     let general = ["World / 國際", "香港"].contains(&category);
     let discussion = a["discussionSource"] == true;
-    if !general
-        && matches(
+    if !newsletter
+        && !general
+        && (matches(
             r"(?i)\b(game|gaming|Steam|videogame|PlayStation|Xbox|Nintendo|FPS|esports)\b|遊戲|\u{6e38}\u{620f}|電競|\u{7535}\u{7ade}",
             &title,
-        )
+        ) && !(focused && matches(SEMICONDUCTOR, &title))
+            || focused && (allowed_game || matches(RPG_ROGUELIKE, &title)))
     {
-        if matches(BLOCK_GAMES, &text) || !matches(GAME_NAMES, &title) {
+        if matches(BLOCK_GAMES, &text)
+            || focused && matches("多人線上|大型多人|手遊|手機遊戲", &text)
+            || !allowed_game
+        {
             return None;
         }
         category = "單機遊戲";
@@ -333,17 +375,18 @@ pub fn normalize(app: &App, a: &Value, now: Time) -> Option<Value> {
     if ["單機遊戲", "Steam 單機"].contains(&category)
         || ["pc_singleplayer_nonfps", "steam_app_allowlist"].contains(&s(source, "filter"))
     {
-        if matches(BLOCK_GAMES, &text)
-            || source["filter"] != "steam_app_allowlist" && !matches(GAME_NAMES, &title)
+        if matches(BLOCK_GAMES, &text) || source["filter"] != "steam_app_allowlist" && !allowed_game
         {
             return None;
         }
         category = "單機遊戲";
     }
-    if !general && matches(r"(?i)CVE-\d{4}-\d+|vulnerabilit|zero.day|漏洞", &title) {
+    if !newsletter && !general && matches(r"(?i)CVE-\d{4}-\d+|vulnerabilit|zero.day|漏洞", &title)
+    {
         category = "資安";
     }
-    if category == "資安"
+    if !newsletter
+        && category == "資安"
         && (matches(EXCLUDED, &text)
             || !CVE_IDS.is_match(&full_cve_text)
             || !matches(MAJOR, &text)
@@ -354,7 +397,7 @@ pub fn normalize(app: &App, a: &Value, now: Time) -> Option<Value> {
     {
         return None;
     }
-    if !["單機遊戲", "資安", "World / 國際", "香港"].contains(&category) {
+    if !newsletter && !["單機遊戲", "資安", "World / 國際", "香港"].contains(&category) {
         let elixir = matches(r"(?i)\b(elixir|erlang)\b", &text)
             || matches(r"(?i)\b(OTP|Phoenix|Hex|BEAM)\b", &text)
                 && (source["category"] == "Elixir / Erlang"
@@ -396,7 +439,8 @@ pub fn normalize(app: &App, a: &Value, now: Time) -> Option<Value> {
             return None;
         }
     }
-    if category == "AI"
+    if !newsletter
+        && category == "AI"
         && matches(
             r"(?i)for beginners|complete guide|what is an? (ai|llm)|most beginners",
             &title,
@@ -468,6 +512,242 @@ pub fn normalize(app: &App, a: &Value, now: Time) -> Option<Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn requested_taiwan_tech_interests() {
+        let now = date("2026-10-25T04:00:00Z").unwrap();
+        let mut app = App::load(env!("CARGO_MANIFEST_DIR").into()).unwrap();
+        for name in ["TechNice 科技島", "XFastest", "EE Times Taiwan"] {
+            let source = app
+                .registry
+                .as_array_mut()
+                .unwrap()
+                .iter_mut()
+                .find(|source| source["name"] == name)
+                .unwrap();
+            assert_eq!(source["filter"], "user_tech_interests");
+            assert_eq!(source["language"], "zh-Hant");
+            // Test selection separately from live transport and publication holds.
+            source["enabled"] = json!(true);
+            for (title, excerpt, accepted) in [
+                ("Java新版釋出", "JVM 效能改善", true),
+                ("Kotlin 與 Rust 工具更新", "開發工具", true),
+                ("Elixir、Erlang 新版推出", "程式語言", true),
+                ("Node.js、JavaScript、TypeScript 更新", "開發工具", true),
+                ("OpenAI發布模型", "AI推論成本下降", true),
+                ("台積電先進封裝技術", "半導體產業", true),
+                ("AMD Ryzen 處理器轉向高階遊戲市場", "CPU 架構更新", true),
+                ("全新 PC 單機 Roguelike 遊戲上市", "回合制冒險", true),
+                ("全新 Steam 單人 RPG 遊戲上市", "角色扮演", true),
+                ("殺戮尖塔更新", "PC 單機遊戲", true),
+                ("地方道路施工", "居民改道", false),
+                ("咖啡買一送一", "台灣限定優惠", false),
+                ("AI工程師徵才", "招募 Java 開發人員", false),
+                ("AMD CPU 折價優惠", "半導體產品促銷", false),
+                ("Steam FPS RPG 遊戲上市", "單人 PC 遊戲", false),
+                ("決勝時刻推出 AI 功能", "多人線上射擊", false),
+                ("全新 RPG 遊戲上市", "Android 手遊", false),
+                ("全新 RPG 遊戲上市", "未說明平台", false),
+                ("全新 PC RPG 遊戲上市", "未說明單人模式", false),
+                ("JavaScript安全漏洞 CVE-2026-12345", "一般風險", false),
+            ] {
+                let candidate = json!({"source":name,"title":title,"feedExcerpt":excerpt,
+                    "url":"https://example.com/news","publishedAt":stamp(now)});
+                assert_eq!(
+                    normalize(&app, &candidate, now).is_some(),
+                    accepted,
+                    "{name}: {title}"
+                );
+            }
+        }
+        let candidate = json!({"source":"XFastest","title":"全新 PC 單機 Roguelike 遊戲上市",
+            "url":"https://example.com/game","publishedAt":stamp(now)});
+        assert_eq!(
+            normalize(&app, &candidate, now).unwrap()["category"],
+            "單機遊戲"
+        );
+        let source = app
+            .registry
+            .as_array_mut()
+            .unwrap()
+            .iter_mut()
+            .find(|s| s["name"] == "XFastest")
+            .unwrap();
+        source["enabled"] = json!(false);
+        assert!(normalize(&app, &candidate, now).is_none());
+    }
+
+    #[test]
+    fn newsletter_feed_dates_keep_issue_cards_for_fourteen_days() {
+        let now = date("2026-10-25T04:00:00Z").unwrap();
+        let app = App::load(env!("CARGO_MANIFEST_DIR").into()).unwrap();
+        let source = rows(&app.registry)
+            .iter()
+            .find(|source| source["id"] == "programming-digest")
+            .unwrap();
+        for (id, url) in [
+            (
+                "programming-digest",
+                "https://programmingdigest.net/newsletters.rss",
+            ),
+            ("frontend-focus", "https://frontendfoc.us/rss/"),
+            ("web-tools-weekly", "https://webtoolsweekly.com/feed"),
+            ("react-status", "https://react.statuscode.com/rss/"),
+            ("jvm-weekly", "https://www.jvm-weekly.com/feed"),
+            ("javascript-weekly", "https://javascriptweekly.com/rss/"),
+        ] {
+            let registered = rows(&app.registry)
+                .iter()
+                .find(|entry| entry["id"] == id)
+                .unwrap();
+            assert_eq!(registered["url"], url);
+            assert_eq!(registered["category"], "Newsletter");
+            assert_eq!(registered["newsletter"], true);
+            assert_eq!(registered["enabled"], true);
+        }
+        let unresolved = ["baeldung-weekly-candidate", "jetbrains-jam-candidate"];
+        for id in unresolved {
+            let candidate = rows(&app.registry)
+                .iter()
+                .find(|entry| entry["id"] == id)
+                .unwrap();
+            assert_eq!(candidate["enabled"], false);
+            assert_eq!(candidate["url"], Value::Null);
+        }
+        let issue = |url: &str, pub_date: Option<&str>| {
+            let date_tag = pub_date
+                .map(|date| format!("<pubDate>{date}</pubDate>"))
+                .unwrap_or_default();
+            format!(
+                "<rss><channel><item><title>Programming Digest issue 42</title><link>{url}</link>{date_tag}<description>Weekly programming links</description></item></channel></rss>"
+            )
+        };
+        let boundary = parse_feed(
+            source,
+            issue(
+                "https://programmingdigest.net/issues/42",
+                Some("Sun, 11 Oct 2026 04:00:00 +0000"),
+            )
+            .as_bytes(),
+            now,
+            |_| None,
+        )
+        .unwrap();
+        assert_eq!(boundary.len(), 1, "one RSS issue stays one card at 14 days");
+        assert_eq!(boundary[0]["publishedAt"], "2026-10-11T04:00:00Z");
+        assert_eq!(
+            normalize(&app, &boundary[0], now).unwrap()["category"],
+            "Newsletter"
+        );
+        assert!(
+            parse_feed(
+                source,
+                issue(
+                    "https://programmingdigest.net/issues/41",
+                    Some("Sat, 10 Oct 2026 04:00:00 +0000"),
+                )
+                .as_bytes(),
+                now,
+                |_| None,
+            )
+            .unwrap()
+            .is_empty()
+        );
+
+        let ordinary = rows(&app.registry)
+            .iter()
+            .find(|source| source["name"] == "Inside Java")
+            .unwrap();
+        assert_eq!(
+            parse_feed(
+                ordinary,
+                issue(
+                    "https://inside.java/issues/72",
+                    Some("Thu, 22 Oct 2026 04:00:00 +0000"),
+                )
+                .as_bytes(),
+                now,
+                |_| None,
+            )
+            .unwrap()
+            .len(),
+            1,
+            "ordinary news keeps the 72-hour boundary"
+        );
+        assert!(
+            parse_feed(
+                ordinary,
+                issue(
+                    "https://inside.java/issues/73",
+                    Some("Sun, 18 Oct 2026 04:00:00 +0000"),
+                )
+                .as_bytes(),
+                now,
+                |_| None,
+            )
+            .unwrap()
+            .is_empty(),
+            "ordinary news at seven days is excluded beyond the 72-hour window"
+        );
+        assert!(
+            parse_feed(
+                source,
+                issue("https://programmingdigest.net/issues/undated", None).as_bytes(),
+                now,
+                |_| None,
+            )
+            .unwrap()
+            .is_empty(),
+            "an unknown publication date is never replaced with fetch time"
+        );
+
+        let perf = rows(&app.registry)
+            .iter()
+            .find(|source| source["id"] == "java-performance-tuning-candidate")
+            .unwrap();
+        assert_eq!(perf["enabled"], false);
+        assert!(s(perf, "disabledReason").contains("needs_date_mapping"));
+        assert_eq!(
+            rows(&app.registry)
+                .iter()
+                .filter(|source| source["url"] == "https://javascriptweekly.com/rss/")
+                .count(),
+            1,
+            "JavaScript Weekly has one registered feed"
+        );
+        let spring = rows(&app.registry)
+            .iter()
+            .find(|source| source["name"] == "Spring")
+            .unwrap();
+        assert_eq!(spring["url"], "https://spring.io/blog.atom");
+        assert_ne!(
+            spring["newsletter"], true,
+            "the Spring blog keeps its existing role"
+        );
+        for (name, url) in [
+            ("Baeldung Java", "https://www.baeldung.com/feed"),
+            (
+                "JetBrains Kotlin",
+                "https://blog.jetbrains.com/kotlin/feed/",
+            ),
+        ] {
+            assert!(
+                rows(&app.registry)
+                    .iter()
+                    .any(|entry| entry["name"] == name && entry["url"] == url)
+            );
+        }
+        let spring_issue = rows(&app.registry)
+            .iter()
+            .find(|source| source["id"] == "this-week-in-spring-candidate")
+            .unwrap();
+        assert_eq!(spring_issue["enabled"], false);
+        assert_eq!(
+            spring_issue["url"],
+            Value::Null,
+            "the issue URL is not an RSS URL"
+        );
+    }
+
     #[test]
     fn rss_atom_and_topic_policy() {
         let now = date("2026-10-19T01:00:00Z").unwrap();

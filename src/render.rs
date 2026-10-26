@@ -49,7 +49,7 @@ fn current_story(story: &Value, now: Time) -> bool {
             && if story["kind"] == "deal" {
                 now - at < Duration::hours(72)
             } else {
-                now - at <= Duration::hours(72)
+                current_for_category(s(story, "publishedAt"), s(story, "category"), now)
             }
     })
 }

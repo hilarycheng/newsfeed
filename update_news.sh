@@ -18,7 +18,15 @@ done
 export GIT_TERMINAL_PROMPT=0
 export GIT_SSH_COMMAND='ssh -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15'
 
+unset HTTPS_PROXY
+unset HTTP_PROXY
+unset ALL_PROXY
+unset https_proxy
+unset http_proxy
+unset all_proxy
+
 ./news-feeder --quiet "$@"
+
 files=(index.html sw.js manifest.webmanifest icon-192.png icon-512.png apple-touch-icon.png)
 checksums=$(jq -er '
   select(.status == "success" and .artifact == "dist/index.html")

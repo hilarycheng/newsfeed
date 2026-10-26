@@ -63,6 +63,29 @@ fn deal_dates_boundaries_and_chronology() {
 }
 
 #[test]
+fn newsletter_archive_boundary_is_fourteen_days_and_news_stays_three_days() {
+    let feed = fixture();
+    let now = date(s(&feed, "updatedAt")).unwrap();
+    let mut story = feed["stories"][0].clone();
+    story["category"] = json!("Newsletter");
+    story["publishedAt"] = json!(stamp(now - Duration::hours(14 * 24)));
+    assert!(
+        current_story(&story, now),
+        "newsletter boundary is inclusive"
+    );
+    story["publishedAt"] = json!(stamp(now - Duration::hours(14 * 24 + 1)));
+    assert!(!current_story(&story, now));
+    story["category"] = json!("Java / Kotlin");
+    story["publishedAt"] = json!(stamp(now - Duration::hours(72)));
+    assert!(
+        current_story(&story, now),
+        "ordinary news keeps its 72-hour boundary"
+    );
+    story["publishedAt"] = json!(stamp(now - Duration::hours(73)));
+    assert!(!current_story(&story, now));
+}
+
+#[test]
 fn publication_is_safe_compact_and_self_contained() {
     let mut input = fixture();
     input["stories"][0]["privateFixtureField"] = json!("must-stay-local");

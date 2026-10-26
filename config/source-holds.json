@@ -1,17 +1,7 @@
 {
-  "rss": {
-    "https://nodejs.org/en/feed/blog.xml": "暫時略過：此確切 RSS 網址的讀取被存取審核拒絕；不再重試，其他已批准來源繼續。",
-    "https://openai.com/news/rss.xml": "暫時略過：此確切 RSS 網址的讀取被存取審核拒絕；不再重試，其他已批准來源繼續。"
-  },
-  "cve": "暫時略過：官方 CVE JSON 尚有待處理記錄；本期不顯示未完整核實的 CVE。",
-  "networkPolicy": "User approved the fixed inventory on 2026-10-15: 189 exact registered RSS URLs, 4 Steam queries and at most 30 bounded iThome date requests. Inventory SHA-256 ff10329da9c2b52045f9b5dd5ae36cb28d9a3f1d76ffaf1f2cbef68ffbd67ab1. No redirects or unregistered destinations. CVE remains held. The earlier opaque denied URL remains unidentified and must not be requested. Platform review still applies; do not bypass a denial.",
+  "rss": {},
+  "networkPolicy": "User approved the fixed inventory on 2026-10-15: 189 exact registered RSS URLs, 4 Steam queries and at most 30 bounded iThome date requests. Inventory SHA-256 ff10329da9c2b52045f9b5dd5ae36cb28d9a3f1d76ffaf1f2cbef68ffbd67ab1. On 2026-10-26, the user instructed that all previously held registered RSS feeds and official CVE intake return to normal fetching; these holds were removed without running a fetch. No redirects or unregistered destinations. The earlier opaque denied URL remains unidentified and must not be requested. Platform review still applies; stop if a new denial occurs and do not bypass it.",
   "createdAt": "2026-10-13T22:58:00Z",
-  "updatedAt": "2026-10-16T04:03:37.816258Z",
-  "deniedHosts": {
-    "bun.sh": "暫時略過：存取審核拒絕此 hostname；證據只提供 domain，並非精確 URL。所有同 hostname 請求均禁止。",
-    "deno.com": "暫時略過：存取審核拒絕此 hostname；證據只提供 domain，並非精確 URL。所有同 hostname 請求均禁止。",
-    "tokio.rs": "暫時略過：存取審核拒絕此 hostname；證據只提供 domain，並非精確 URL。所有同 hostname 請求均禁止。",
-    "rustfoundation.org": "暫時略過：存取審核拒絕此 hostname；證據只提供 domain，並非精確 URL。所有同 hostname 請求均禁止。",
-    "huggingface.co": "暫時略過：存取審核拒絕此 hostname；證據只提供 domain，並非精確 URL。所有同 hostname 請求均禁止。"
-  }
+  "updatedAt": "2026-10-26T12:34:25Z",
+  "deniedHosts": {}
 }

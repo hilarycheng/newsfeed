@@ -14,6 +14,7 @@
   try {
     let doc = await open(fixturePage);
     const select = key => doc.querySelector(`[data-feed-filter="${key}"]`).click();
+    const language = key => doc.querySelector(`[data-language-filter="${key}"]`).click();
     const articles = () => [...doc.querySelectorAll('#feed article')];
     const ids = () => articles().map(a => a.dataset.storyId);
     const more = () => doc.getElementById('load-more').click();
@@ -64,6 +65,10 @@
       const style = frame.contentWindow.getComputedStyle(doc.getElementById('feed'));
       equal(style.gridTemplateColumns.split(' ').length, columns, 'columns at ' + width);
       assert(doc.documentElement.scrollWidth <= width, 'horizontal overflow at ' + width);
+      for (const control of doc.querySelectorAll('[data-language-filter], [data-feed-filter]')) {
+        const rect = control.getBoundingClientRect();
+        assert(rect.height >= 44 && rect.left >= 0 && rect.right <= width, 'language button fits at ' + width);
+      }
       const first = articles()[0];
       const measure = selector => first.querySelector(selector).getBoundingClientRect();
       if (columns > 1) equal(Math.round(first.getBoundingClientRect().width), 448, 'desktop card width');
@@ -78,6 +83,64 @@
     equal(frame.contentWindow.errors, [], 'browser errors');
     const mutate = change => fixturePage.replace(/(<script type="application\/json" id="feed-data">)([\s\S]*?)(<\/script>)/,
       (_, before, json, after) => { const data = JSON.parse(json); change(data); return before + JSON.stringify(data).replaceAll('<', '\\u003c') + after; });
+    doc = await open(mutate(data => {
+      data.stories.filter(s => s.id.startsWith('world-')).forEach(s => { s.sourceLanguage = 'zh-Hant'; });
+      data.stories.find(s => s.id === 'hk-0').sourceLanguage = 'zh-HK';
+      data.stories.find(s => s.id === 'tech-0').originalLanguage = 'zh-Hans';
+      delete data.stories.find(s => s.id === 'tech-2').sourceLanguage;
+      data.stories.find(s => s.id === 'tech-3').sourceLanguage = 'ja';
+      data.stories.find(s => s.id === 'tech-4').sourceLanguage = 'en-US';
+    }));
+    equal(doc.querySelector('[data-language-filter][aria-pressed=true]').textContent, '全部語言', 'default language');
+    language('zh');
+    equal(articles().length, 16, 'Chinese first page');
+    equal(doc.getElementById('edition-count').textContent, '22 則', 'Chinese includes traditional, Hong Kong and simplified');
+    assert(ids().includes('tech-0'), 'original simplified language takes precedence');
+    assert(doc.getElementById('shortfall').hidden && doc.getElementById('volume-target').hidden, 'global target hidden for language subset');
+    const oldLanguageObserver = frame.contentWindow.observers.at(-1);
+    more(); equal(articles().length, 22, 'Chinese next page');
+    select('world');
+    equal(ids(), Array.from({ length: 16 }, (_, i) => 'world-' + i), 'combined filter preserves order and resets page');
+    equal(doc.getElementById('filter-status').textContent, 'World · 中文 · 顯示 16 / 20 則', 'combined status');
+    oldLanguageObserver.callback([{ isIntersecting: true }]);
+    equal(articles().length, 16, 'old language observer ignored');
+    frame.contentWindow.observers.at(-1).callback([{ isIntersecting: true }]);
+    equal(articles().length, 20, 'Chinese infinite scroll');
+    select('tech'); equal(ids(), ['tech-0'], 'Tech and Chinese');
+    select('hong-kong'); equal(ids(), ['hk-0'], 'Hong Kong and Chinese');
+    select('steam'); equal(ids(), [], 'empty language and category combination');
+    assert(doc.querySelector('#feed .empty') && doc.getElementById('more').hidden, 'empty combination controls');
+    language('en'); equal(articles().length, 16, 'English retains Steam selection');
+    equal(doc.getElementById('edition-count').textContent, '20 則', 'English Steam count');
+    select('all');
+    equal(doc.getElementById('edition-count').textContent, '67 則', 'English excludes Chinese, unknown and Japanese');
+    assert(ids().includes('tech-4'), 'English regional tag');
+    assert(!ids().some(id => ['tech-0', 'tech-2', 'tech-3'].includes(id)), 'English result languages');
+    const languageObservers = frame.contentWindow.observers.length;
+    language('en'); equal(frame.contentWindow.observers.length, languageObservers, 'same language no duplicate');
+    language('all');
+    equal(doc.getElementById('edition-count').textContent, '91 則', 'all languages restores entire feed');
+    assert(ids().includes('tech-2') && ids().includes('tech-3'), 'unknown and other languages remain in All');
+    equal(frame.contentWindow.errors, [], 'language browser errors');
+    doc = await open(mutate(data => {
+      const newsletter = { ...data.stories.find(s => s.id === 'tech-0'), category: 'Newsletter',
+        source: 'Programming Digest', id: 'newsletter-boundary', url: 'https://example.com/newsletter-boundary',
+        publishedAt: '2026-09-29T00:00:00Z' };
+      const expiredNewsletter = { ...newsletter, id: 'newsletter-expired', url: 'https://example.com/newsletter-expired',
+        publishedAt: '2026-09-28T23:59:59Z' };
+      const ordinary = { ...newsletter, category: 'Java / Kotlin', source: 'Inside Java',
+        id: 'ordinary-boundary', url: 'https://example.com/ordinary-boundary', publishedAt: '2026-10-10T00:00:00Z' };
+      const expiredOrdinary = { ...ordinary, id: 'ordinary-expired', url: 'https://example.com/ordinary-expired',
+        publishedAt: '2026-10-09T23:59:59Z' };
+      data.stories = [newsletter, expiredNewsletter, ordinary, expiredOrdinary];
+    }));
+    select('newsletter');
+    equal(ids(), ['newsletter-boundary', 'newsletter-expired'], 'newsletter category includes issues up to the archive boundary');
+    equal(doc.getElementById('filter-status').textContent, 'Newsletters · 顯示 2 / 2 則', 'newsletter category filter');
+    equal(doc.querySelector('.archive-heading').previousElementSibling.dataset.storyId, 'newsletter-boundary', '14-day issue remains current');
+    select('tech');
+    equal(ids(), ['ordinary-boundary', 'ordinary-expired'], 'ordinary news remains in the 72-hour category');
+    equal(doc.querySelector('.archive-heading').previousElementSibling.dataset.storyId, 'ordinary-boundary', '72-hour boundary remains current');
     doc = await open(mutate(data => data.stories = data.stories.filter(s => s.category !== '香港')));
     select('hong-kong'); equal(articles().length, 0, 'empty category');
     assert(doc.querySelector('#feed .empty') && doc.getElementById('more').hidden, 'empty state controls');

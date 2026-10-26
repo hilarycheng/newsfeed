@@ -10,7 +10,8 @@ edition=e.dt.datetime.fromisoformat(a['updatedAt'].replace('Z','+00:00'))
 for x in s:
  at=e.dt.datetime.fromisoformat((x.get('freshnessAt') if x.get('kind')=='deal' else x['publishedAt']).replace('Z','+00:00'))
  anchor=e.NOW if x.get('kind')=='deal' else edition
- assert anchor-e.dt.timedelta(hours=72)<=at<=anchor
+ window_hours=14*24 if x.get('category')=='Newsletter' and x.get('kind')!='deal' else 72
+ assert anchor-e.dt.timedelta(hours=window_hours)<=at<=anchor
 assert all(x.get('publishedAt') is None and (x.get('deal',{}).get('firstSeen') or x.get('deal',{}).get('firstSeenAt')) and x.get('checkedAt') for x in s if x.get('kind')=='deal')
 assert all(all(e.CVE_RE.fullmatch(c) for c in x.get('cveIds',[])) for x in s)
 cve_ids=[c.upper() for x in s for c in x.get('cveIds',[])]

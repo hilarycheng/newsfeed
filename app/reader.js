@@ -1,17 +1,19 @@
 (() => {
 'use strict';
 const WINDOW_MS = 72 * 60 * 60 * 1000;
+const NEWSLETTER_WINDOW_MS = 14 * WINDOW_MS;
 const PAGE_SIZE = 16;
 const TECH_CATEGORIES = new Set([
   'Java / Kotlin', 'Rust / Node.js', 'Linux', '資安', 'AI', '單機遊戲',
   'Android / 嵌入式', '科技', 'Elixir / Erlang',
 ]);
-const CATEGORIES = [...TECH_CATEGORIES, 'World / 國際', '香港'];
+const CATEGORIES = [...TECH_CATEGORIES, 'World / 國際', '香港', 'Newsletter'];
 const FILTERS = [
   { key: 'all', label: 'All' },
   { key: 'tech', label: 'Tech' },
   { key: 'world', label: 'World' },
   { key: 'hong-kong', label: 'Hong Kong' },
+  { key: 'newsletter', label: 'Newsletters' },
   { key: 'steam', label: 'Steam' },
   { key: 'cve', label: 'CVE' },
 ];
@@ -37,13 +39,20 @@ function storyTimestamp(story) {
 
 function isCurrent(story, updatedAt) {
   const age = Date.parse(updatedAt) - Date.parse(storyTimestamp(story));
+  const window = story.kind !== 'deal' && story.category === 'Newsletter' ? NEWSLETTER_WINDOW_MS : WINDOW_MS;
+  return Number.isFinite(age) && age >= 0 && (story.kind === 'deal' ? age < window : age <= window);
+}
+
+function isWithin72Hours(story, updatedAt) {
+  const age = Date.parse(updatedAt) - Date.parse(storyTimestamp(story));
   return Number.isFinite(age) && age >= 0 && (story.kind === 'deal' ? age < WINDOW_MS : age <= WINDOW_MS);
 }
 
 function filterKeysForStory(story) {
   if (story.kind === 'deal') return ['all', 'steam'];
   const keys = ['all'];
-  if (['World / 國際', 'World', '國際'].includes(story.category)) keys.push('world');
+  if (story.category === 'Newsletter') keys.push('newsletter');
+  else if (['World / 國際', 'World', '國際'].includes(story.category)) keys.push('world');
   else if (['香港', 'Hong Kong / 香港', 'Hong Kong'].includes(story.category)) keys.push('hong-kong');
   else if (TECH_CATEGORIES.has(story.category)) keys.push('tech');
   // Do not infer eligibility from the headline. The feeder supplies these IDs
@@ -89,9 +98,11 @@ function createCards(feed) {
   return feed.stories.map(story => ({
     story,
     current: isCurrent(story, feed.updatedAt),
+    within72h: isWithin72Hours(story, feed.updatedAt),
     deal: story.kind === 'deal',
     expiresAt: story.kind === 'deal' ? Math.min(Date.parse(storyTimestamp(story)) + WINDOW_MS, /^\d{4}-\d{2}-\d{2}T/.test(story.deal?.saleEnd || '') && validTimestamp(story.deal.saleEnd) ? Date.parse(story.deal.saleEnd) : Infinity) : null,
     filters: filterKeysForStory(story),
+    language: (story.originalLanguage || story.sourceLanguage || '').split('-')[0].toLowerCase(),
   }));
 }
 
@@ -106,8 +117,10 @@ function startReader() {
   const button = document.getElementById('load-more');
   const end = document.getElementById('end');
   const controls = [...document.querySelectorAll('[data-feed-filter]')];
+  const languageControls = [...document.querySelectorAll('[data-language-filter]')];
   const status = document.getElementById('filter-status');
   let active = 'all';
+  let activeLanguage = 'all';
   let matching = cards;
   let shown = 0;
   let archiveShown = false;
@@ -138,8 +151,9 @@ function startReader() {
       if (notice) notice.hidden = Number.isFinite(checked) && Date.now() - checked <= 129600000;
     });
     feed.querySelectorAll('.number').forEach((el, index) => { el.textContent = String(index + 1).padStart(2, '0'); });
-    const label = payload.filters.find(filter => filter.key === active).label;
-    const freshNews = matching.filter(entry => entry.current && !entry.deal).length;
+    const label = payload.filters.find(filter => filter.key === active).label
+      + (activeLanguage === 'all' ? '' : ' · ' + languageControls.find(control => control.dataset.languageFilter === activeLanguage).textContent);
+    const freshNews = matching.filter(entry => entry.within72h && !entry.deal).length;
     const deals = matching.filter(entry => entry.deal).length;
     button.textContent = '載入更多 · 還有 ' + Math.max(0, matching.length - shown) + ' 則';
     more.hidden = shown >= matching.length;
@@ -147,8 +161,8 @@ function startReader() {
     document.getElementById('end-count').textContent = '已讀完 ' + matching.length + ' 則';
     document.getElementById('edition-count').textContent = matching.length + ' 則';
     document.getElementById('volume-count').textContent = '近三日 · 72 小時 · ' + freshNews + ' 則' + (deals ? ' · ' + deals + ' 個優惠' : '');
-    document.getElementById('shortfall').hidden = active !== 'all' || freshNews >= 200;
-    document.getElementById('volume-target').hidden = active !== 'all';
+    document.getElementById('shortfall').hidden = active !== 'all' || activeLanguage !== 'all' || freshNews >= 200;
+    document.getElementById('volume-target').hidden = active !== 'all' || activeLanguage !== 'all';
     status.textContent = label + ' · 顯示 ' + shown + ' / ' + matching.length + ' 則';
     images();
   }
@@ -172,17 +186,18 @@ function startReader() {
     active = key;
     cards = payload.cards.filter(entry => !entry.deal || entry.expiresAt > Date.now());
     // Filter the entire edition before pagination, never only the loaded cards.
-    matching = cards.filter(entry => entry.filters.includes(key));
+    matching = cards.filter(entry => entry.filters.includes(key) && (activeLanguage === 'all' || entry.language === activeLanguage));
     shown = 0;
     archiveShown = false;
     feed.replaceChildren();
     controls.forEach(control => control.setAttribute('aria-pressed', String(control.dataset.feedFilter === key)));
+    languageControls.forEach(control => control.setAttribute('aria-pressed', String(control.dataset.languageFilter === activeLanguage)));
     if (matching.length) load();
     else {
       const empty = document.createElement('div');
       empty.className = 'empty';
       const message = document.createElement('p');
-      message.textContent = '這個分類暫時沒有消息。';
+      message.textContent = '暫時沒有符合篩選條件的消息。';
       empty.append(message);
       feed.append(empty);
       state();
@@ -206,6 +221,15 @@ function startReader() {
     control.disabled = false;
     control.addEventListener('click', () => {
       if (control.dataset.feedFilter !== active) select(control.dataset.feedFilter);
+    });
+  });
+  languageControls.forEach(control => {
+    control.disabled = false;
+    control.addEventListener('click', () => {
+      if (control.dataset.languageFilter !== activeLanguage) {
+        activeLanguage = control.dataset.languageFilter;
+        select(active);
+      }
     });
   });
   button.addEventListener('click', load);

@@ -58,7 +58,7 @@ fn validate(app: &App, feed: &Value, now: Time) -> Result<()> {
             || !urls.insert(s(a, "url"))
             || news::medium(app, a)
             || safe_url(s(a, "url"), false).is_none()
-            || !current(timestamp, now)
+            || !current_for_category(timestamp, s(a, "category"), now)
             || format!("{}{}", s(a, "title"), s(a, "summary"))
                 .to_lowercase()
                 .contains("<script")
@@ -371,9 +371,21 @@ mod tests {
         let mut candidates: Vec<_> = (0..30).map(|i| json!({"source":"Inside Java","title":format!("Java fixture {i}"),"feedExcerpt":"Synthetic fixture only.","url":format!("https://example.com/{i}"),"publishedAt":stamp(now)})).collect();
         candidates[0]["source"] = json!("Elixir 官方部落格");
         candidates[0]["title"] = json!("Elixir fixture");
+        candidates.push(json!({"source":"Programming Digest","title":"Programming Digest issue 42",
+            "feedExcerpt":"Weekly programming links.","url":"https://programmingdigest.net/issues/42",
+            "publishedAt":stamp(now-Duration::hours(NEWSLETTER_WINDOW_HOURS - 1))}));
+        candidates.push(json!({"source":"Programming Digest","title":"Programming Digest issue 41",
+            "feedExcerpt":"Weekly programming links.","url":"https://programmingdigest.net/issues/41",
+            "publishedAt":stamp(now-Duration::days(7))}));
+        candidates.push(
+            json!({"source":"Programming Digest","title":"Programming Digest issue 42",
+            "feedExcerpt":"Duplicate fixture item.","url":"https://programmingdigest.net/issues/42",
+            "publishedAt":stamp(now-Duration::hours(NEWSLETTER_WINDOW_HOURS - 1))}),
+        );
         let mut statuses = vec![json!({"name":"Inside Java","status":"ok"})];
         statuses.extend((1..10).map(|i| json!({"name":format!("Fixture {i}"),"status":"ok"})));
         statuses.push(json!({"name":"Elixir 官方部落格","status":"ok"}));
+        statuses.push(json!({"name":"Programming Digest","status":"ok"}));
         write_json(
             &root.join(".sites-runtime/candidates.json"),
             &json!({"fetchedAt":stamp(now),"candidates":candidates,"sourceStatus":statuses}),
@@ -387,7 +399,18 @@ mod tests {
         let app = App::load(root.into()).unwrap();
         let result = run(&app, true).unwrap();
         assert_eq!(result["status"], "success", "{result}");
-        assert_eq!(result["itemCount"], 30);
+        assert_eq!(result["itemCount"], 32);
+        let generated: Value =
+            serde_json::from_slice(&fs::read(root.join("data/feed.json")).unwrap()).unwrap();
+        assert!(
+            rows(&generated["stories"]).iter().any(|story| {
+                story["source"] == "Programming Digest"
+                    && story["title"] == "Programming Digest issue 41"
+                    && story["publishedAt"] == stamp(now - Duration::days(7))
+                    && story["category"] == "Newsletter"
+            }),
+            "a seven-day newsletter issue passes complete generation validation"
+        );
         assert!(root.join("dist/index.html").exists());
         assert_eq!(fs::read_dir(root.join("dist")).unwrap().count(), 6);
         assert!(

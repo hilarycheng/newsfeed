@@ -16,6 +16,7 @@ use std::{
 
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
 pub type Time = DateTime<Utc>;
+pub const NEWSLETTER_WINDOW_HOURS: i64 = 14 * 24;
 
 pub static QUIET: AtomicBool = AtomicBool::new(false);
 
@@ -70,6 +71,15 @@ pub fn recent(value: &str, now: Time) -> Result<()> {
 
 pub fn current(value: &str, now: Time) -> bool {
     date(value).is_some_and(|d| now - Duration::hours(72) <= d && d <= now)
+}
+
+pub fn current_for_category(value: &str, category: &str, now: Time) -> bool {
+    let hours = if category == "Newsletter" {
+        NEWSLETTER_WINDOW_HOURS
+    } else {
+        72
+    };
+    date(value).is_some_and(|d| now - Duration::hours(hours) <= d && d <= now)
 }
 
 pub fn hash(value: &[u8]) -> String {

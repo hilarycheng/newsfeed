@@ -71,7 +71,7 @@ Quiet mode 保留 exit code、結果檔案（一般更新亦保留日誌）。�
 | `config/cve-policy.json` | 原有 CVE schema 同開源產品判斷清單 |
 | `config/source-holds.json` | 現有 URL／hostname／CVE holds |
 
-現有 holds 同禁止 redirect 嘅行為會保留。移植唔代表解除存取限制。
+RSS 同 CVE holds 已按 2026-10-26 指示清除；固定來源清單、禁止 redirect 規則同外部存取審核仍然適用。
 
 ## dot 複製流程
 
@@ -222,6 +222,8 @@ PWA 測試使用 `cargo test` 產生嘅 debug binary、localhost 同兩期合成
 預設使用 `google-chrome`；其他路徑可透過 `CHROME_BIN` 指定。測試封鎖外部 hostname，核對分類、分頁、無限捲動、手機／桌面欄數、圖片失敗、授權及惡意內容 escaping，唔需要 Node.js 或 Playwright。
 
 HTML 只存一份精簡閱讀資料，卡片 markup 由瀏覽器按頁生成；停用 JavaScript 時顯示首 16 則標題、摘錄同來源。
+語言按鈕提供「全部語言／English／中文」，可同分類一齊篩選；中文包含繁體、香港中文同已獲准收錄嘅簡體內容。每次開啟預設全部語言，切換篩選會重設分頁，結果保持原有時間排序；唔會翻譯文章或啟用新來源。
+Newsletters 分類以 RSS 每期一項顯示，保留 14 日（包括第 14 日邊界）；一般新聞維持 72 小時，Steam 優惠同 CVE 沿用原有規則。沒有可靠日期嘅 feed 不會以讀取時間補日期；Java Performance Tuning 暫停收錄，直到有證據可映射出版日期。
 CSS 移除註解同多餘換行；JavaScript 保留語義需要嘅換行，唔用危險嘅 regex minifier。原出版者文字保持完整。
 
 `scripts/*.py` 保留作移植對照，唔屬於 Rust 執行路徑；舊 Python pipeline 嘅網站生成亦改用 Rust `--build-only`。
