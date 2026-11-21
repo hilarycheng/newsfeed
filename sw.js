@@ -1,6 +1,6 @@
 const ROOT = new URL(self.registration.scope);
 const PREFIX = 'newsfeed:' + ROOT.href + ':';
-const CACHE = PREFIX + 'b38791430e6f26fe95957c8bccd2b5325bab037d5a6cdc487b72c46a6cdf520b';
+const CACHE = PREFIX + '5f157d91fca943fbaf89de765dd422343a06b1c504a415b8bbc92cd0f46c41a6';
 const INDEX = new URL('index.html', ROOT).href;
 const ASSETS = ['index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'].map(path => new URL(path, ROOT).href);
 
